@@ -1,0 +1,243 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Findost Project",
+    "description": "Findost Project Api's",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "basePath": "/communication/v1/",
+  "schemes": ["http", "https"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "securityDefinitions": {
+    "Bearer": {
+      "name": "Authorization",
+      "in": "header",
+      "type": "apiKey",
+      "description": "JWT Authorization header"
+    }
+  },
+  "paths": {
+    "/notificationTemplate-management/create": {
+      "post": {
+        "tags": ["Notification TemplateManagement"],
+        "security": [{ "Bearer": [] }],
+        "summary": "Create new createNotificationTemplate type",
+        "parameters": [
+          {
+            "name": "createNotificationTemplate",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/createNotificationTemplateSchema"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/notificationTemplate-management/update": {
+      "put": {
+        "tags": ["Notification TemplateManagement"],
+        "security": [{ "Bearer": [] }],
+        "summary": "update createNotificationTemplate type",
+        "parameters": [
+          {
+            "name": "notificationTemplateId",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "createNotificationTemplate",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/createNotificationTemplateSchema"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/notificationTemplate-management/get": {
+      "get": {
+        "tags": ["Notification TemplateManagement"],
+        "security": [{ "Bearer": [] }],
+        "summary": "get createNotificationTemplate details",
+        "parameters": [
+          {
+            "name": "notificationTemplateId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/notificationTemplate-management/list": {
+      "get": {
+        "tags": ["Notification TemplateManagement"],
+        "security": [{ "Bearer": [] }],
+        "summary": "List all categories",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/notificationTemplate-management/delete": {
+      "delete": {
+        "tags": ["Notification TemplateManagement"],
+        "security": [{ "Bearer": [] }],
+        "summary": "delete createNotificationTemplate",
+        "parameters": [
+          {
+            "name": "notificationTemplateId",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "details": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "response": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "type": "string"
+        }
+      }
+    },
+    "validationError": {
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "message": { "type": "string" }
+      }
+    },
+    "createNotificationTemplateSchema": {
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}
