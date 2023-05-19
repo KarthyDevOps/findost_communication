@@ -47,5 +47,11 @@ const messages = {
   barCodeExist: "Barcode already exist",
   bulkUploadError: "Bulk Upload Failed",
   barCodeAlreadyExist: "Barcode already exist",
+  //schedule
+  scheduleCreated:"Schedule created Sucessfully",
+  scheduleUpdated : "Schedule update Sucessfully",
+  scheduleDeleted:"Schedule Deleted Sucessfully",
+  scheduleListed:"Schedule Listed Sucessfully"
+
 };
 module.exports = { customMessages, messages };

@@ -10,6 +10,11 @@ const {
   updateNotificationTemplateValidation,
   deleteNotificationTemplateValidation,
   
+  scheduleListValidation, //<----schedule module
+  createScheduleValidation,
+  getScheduleValidation,
+  updateScheduleValidation,
+  deleteScheduleValidation,
 } = require("../validator/validator");
 
 const {
@@ -21,6 +26,11 @@ const {
   exportNotificationTemplate,
 } = require("../controllers/notificationTemplateManagement.controller");
 
+const { addSchedule,
+  getScheduleById,
+  updateSchedule,
+  scheduleList,
+  deleteSchedule} = require("../controllers/schedule.controller")
 const { errHandle } = require("../helpers/index");
 
 const router = Router();
@@ -50,5 +60,13 @@ router.delete(
   [verifyAdminToken,verifyAdminRole("notificationTemplateManagement","DELETE"), deleteNotificationTemplateValidation],
   errHandle(deleteNotificationTemplate)
 );
+
+
+//schedule module
+router.post(routes.v1.schedule.create,[createScheduleValidation],addSchedule)
+router.get(routes.v1.schedule.list,[scheduleListValidation],scheduleList)
+router.put(routes.v1.schedule.update,[updateScheduleValidation],updateSchedule)
+router.delete(routes.v1.schedule.delete,[deleteScheduleValidation],deleteSchedule)
+router.get(routes.v1.schedule.get,[getScheduleValidation],getScheduleById)
 
 module.exports = router;

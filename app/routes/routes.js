@@ -8,6 +8,14 @@ const routes = {
       delete: "/v1/notificationTemplate-management/delete",
       export: "/v1/notificationTemplate-management/export",
     },
+    schedule: {
+      list: "/v1/schedule/list",
+      create: "/v1/schedule/create",
+      get: "/v1/schedule/get",
+      update: "/v1/schedule/update",
+      delete: "/v1/schedule/delete",
+      export: "/v1/schedule/export",
+    },
   },
 };
 
