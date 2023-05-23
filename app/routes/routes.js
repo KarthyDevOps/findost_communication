@@ -16,6 +16,15 @@ const routes = {
       delete: "/v1/schedule/delete",
       export: "/v1/schedule/export",
     },
+    notificationManagement: {
+      list: "/v1/notification-management/list",
+      create: "/v1/notification-management/create",
+      get: "/v1/notification-management/get",
+      update: "/v1/notification-management/update",
+      delete: "/v1/notification-management/delete",
+      export: "/v1/notification-management/export",
+    },
+    
   },
 };
 

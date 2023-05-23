@@ -15,6 +15,12 @@ const {
   getScheduleValidation,
   updateScheduleValidation,
   deleteScheduleValidation,
+
+  notificationListValidation,
+  createNotificationValidation,
+  getNotificationValidation,
+  updateNotificationValidation,
+  deleteNotificationValidation
 } = require("../validator/validator");
 
 const {
@@ -31,10 +37,18 @@ const { addSchedule,
   updateSchedule,
   scheduleList,
   deleteSchedule} = require("../controllers/schedule.controller")
+const {
+  notificationList,
+  createNotification,
+  getNotification,
+  updateNotification,
+  deleteNotification
+} = require("../controllers/notificationManagement.controller");
+
 const { errHandle } = require("../helpers/index");
 
 const router = Router();
-//PRODUCT Management
+//Notification Template Management
 router.get(
   routes.v1.notificationTemplateManagement.list,
   [verifyAdminToken,verifyAdminRole("notificationTemplateManagement","VIEW"), notificationTemplateListValidation],
@@ -68,5 +82,31 @@ router.get(routes.v1.schedule.list,[scheduleListValidation],scheduleList)
 router.put(routes.v1.schedule.update,[updateScheduleValidation],updateSchedule)
 router.delete(routes.v1.schedule.delete,[deleteScheduleValidation],deleteSchedule)
 router.get(routes.v1.schedule.get,[getScheduleValidation],getScheduleById)
+//Notification History Management
+router.get(
+  routes.v1.notificationManagement.list,
+  [verifyAdminToken,verifyAdminRole("notificationManagement","VIEW"), notificationListValidation],
+  errHandle(notificationList)
+);
+router.post(
+  routes.v1.notificationManagement.create,
+  [verifyAdminToken,verifyAdminRole("notificationManagement","ADD"), createNotificationValidation],
+  errHandle(createNotification)
+);
+router.get(
+  routes.v1.notificationManagement.get,
+  [verifyAdminToken,verifyAdminRole("notificationManagement","VIEW"), getNotificationValidation],
+  errHandle(getNotification)
+);
+router.put(
+  routes.v1.notificationManagement.update,
+  [verifyAdminToken,verifyAdminRole("notificationManagement","UPDATE"), updateNotificationValidation],
+  errHandle(updateNotification)
+);
+router.delete(
+  routes.v1.notificationManagement.delete,
+  [verifyAdminToken,verifyAdminRole("notificationManagement","DELETE"), deleteNotificationValidation],
+  errHandle(deleteNotification)
+);
 
 module.exports = router;
