@@ -200,6 +200,181 @@
           }
         }
       }
+    },
+    "/schedule/create": {
+      "post": {
+        "tags": ["schedule Module"],
+        "security": [{ "Bearer": [] }],
+        "summary": "schedule Profile Create",
+        "parameters": [
+          {
+            "name": "scheduleCreate",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/scheduleCreate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+   
+    "/schedule/update": {
+      "put": {
+        "tags": ["schedule Module"],
+        "security": [{ "Bearer": [] }],
+        "summary": "update schedule Details",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "scheduleUpdate",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/scheduleUpdate"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/schedule/get": {
+      "get": {
+        "tags": ["schedule Module"],
+        "security": [{ "Bearer": [] }],
+        "summary": "get schedule details",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/schedule/list": {
+      "get": {
+        "tags": ["schedule Module"],
+        "security": [{ "Bearer": [] }],
+        "summary": "List all schedule",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/schedule/delete": {
+      "delete": {
+        "tags": ["schedule Module"],
+        "security": [{ "Bearer": [] }],
+        "summary": "delete schedule",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -236,6 +411,50 @@
         },
         "isActive": {
           "type": "boolean"
+        }
+      }
+    },
+    "scheduleCreate": {
+      "properties": {
+        "scheduleName": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "agenda": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "string"
+        }
+      }
+    },
+    "scheduleUpdate": {
+      "properties": {
+        "scheduleName": {
+          "type": "string"
+        },
+        "date": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string"
+        },
+        "agenda": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "isActive": {
+          "type": "string"
         }
       }
     }

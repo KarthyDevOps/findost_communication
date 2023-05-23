@@ -42,8 +42,9 @@ const addSchedule = async (req, res) => {
 const getScheduleById = async (req, res) => {
   console.log("data");
   let params = {};
+  params.id = req.query.id
   params.scheduleId =
-    req?.query?.scheduleId || req.user._id.toString();
+    req?.query?.scheduleId ;
   console.log("enter");
   const result = await getScheduleByIdService(params);
   if (!result.status) {

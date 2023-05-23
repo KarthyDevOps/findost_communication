@@ -128,7 +128,7 @@ const createScheduleValidation = (req, res, next) => {
     time: joi.string().required(),
     agenda: joi.string().required(),
     notes: joi.string().required(),
-    isActive: joi.string().required(),
+    isActive: joi.boolean().required(),
   });
   return bodyParamValidation(req, res, next, schema);
 };
@@ -155,7 +155,7 @@ const updateScheduleValidation = (req, res, next) => {
     time: joi.string().optional(),
     agenda: joi.string().optional(),
     notes: joi.string().optional(),
-    isActive: joi.string().optional(),
+    isActive: joi.boolean().optional(),
   });
   return bodyParamValidation(req, res, next, schema);
 };
