@@ -19,7 +19,13 @@ const app = express();
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // Load environment variable
-dotenv.config({ path: path.join(process.cwd(), `${process.argv[2]}`) });
+require("dotenv").config({ path: path.join(process.cwd(), `.env`) });
+const args = process.argv.slice(2)[0];
+process.env.CONFIG_ARG = args;
+let CONFIG = require('./app/configs/config')(args)
+process.env = { ...process.env,...CONFIG}
+console.log('process.env',process.env)
+
 
 app.use(urlencoded({ extended: false }));
 app.use(cors());
