@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js .env.dev",
-    "staging": "nodemon index.js .env.staging",
-    "prod": "nodemon index.js .env.prod"
+    "start": "nodemon index.js DEV",
+    "dev": "nodemon index.js LOCAL",
+    "prod": "nodemon index.js PROD"
   },
   "author": "",
   "license": "ISC",
