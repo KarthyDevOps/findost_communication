@@ -1,67 +1,93 @@
-const express = require("express");
-const urlencoded = express.urlencoded;
-const cookieParser = require("cookie-parser");
-const process = require("process");
-const dotenv = require("dotenv");
-const path = require("path");
-const mongoose = require("mongoose");
-var Schema = mongoose.Schema;
-var cors = require('cors')
-const bodyParser = require("body-parser");
-const routerService = require("./app/router/router");
-const { errHandle } = require("./app/middlewares/errorHandler");
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./app/swagger/swagger.json");
-const exp = require("constants");
-const app = express();
+const fs = require('fs').promises;
+const path = require('path');
+const process = require('process');
+const {authenticate} = require('@google-cloud/local-auth');
+const {google} = require('googleapis');
 
-//swagger setup
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// If modifying these scopes, delete token.json.
+const SCOPES = ['https://www.googleapis.com/auth/calendar.readonly'];
+// The file token.json stores the user's access and refresh tokens, and is
+// created automatically when the authorization flow completes for the first
+// time.
+const TOKEN_PATH = path.join(process.cwd(), 'token.json');
+const CREDENTIALS_PATH = path.join(process.cwd(), 'credentials.json');
 
-// Load environment variable
-dotenv.config({ path: path.join(process.cwd(), `${process.argv[2]}`) });
+/**
+ * Reads previously authorized credentials from the save file.
+ *
+ * @return {Promise<OAuth2Client|null>}
+ */
+async function loadSavedCredentialsIfExist() {
+  try {
+    const content = await fs.readFile(TOKEN_PATH);
+    const credentials = JSON.parse(content);
+    return google.auth.fromJSON(credentials);
+  } catch (err) {
+    return null;
+  }
+}
 
-app.use(urlencoded({ extended: false }));
-app.use(cors());
-app.use(bodyParser.json());
-app.use(cookieParser());
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "*");
-  next();
-});
+/**
+ * Serializes credentials to a file compatible with GoogleAUth.fromJSON.
+ *
+ * @param {OAuth2Client} client
+ * @return {Promise<void>}
+ */
+async function saveCredentials(client) {
+  const content = await fs.readFile(CREDENTIALS_PATH);
+  const keys = JSON.parse(content);
+  const key = keys.installed || keys.web;
+  const payload = JSON.stringify({
+    type: 'authorized_user',
+    client_id: key.client_id,
+    client_secret: key.client_secret,
+    refresh_token: client.credentials.refresh_token,
+  });
+  await fs.writeFile(TOKEN_PATH, payload);
+}
 
-app.use(express.static(__dirname + "/assets"));
+/**
+ * Load or request or authorization to call APIs.
+ *
+ */
+async function authorize() {
+  let client = await loadSavedCredentialsIfExist();
+  if (client) {
+    return client;
+  }
+  client = await authenticate({
+    scopes: SCOPES,
+    keyfilePath: CREDENTIALS_PATH,
+  });
+  if (client.credentials) {
+    await saveCredentials(client);
+  }
+  return client;
+}
 
-var numOfRequest = 1;
-app.use((req, res, next) => {
-  req.startTime = Date.now();
-  req.numOfRequest = numOfRequest;
-  numOfRequest++;
-  console.log("Hit : " + req.originalUrl);
-  next();
-});
+/**
+ * Lists the next 10 events on the user's primary calendar.
+ * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
+ */
+async function listEvents(auth) {
+  const calendar = google.calendar({version: 'v3', auth});
+  const res = await calendar.events.list({
+    calendarId: 'primary',
+    timeMin: new Date().toISOString(),
+    maxResults: 10,
+    singleEvents: true,
+    orderBy: 'startTime',
+  });
+  const events = res.data.items;
+  if (!events || events.length === 0) {
+    console.log('No upcoming events found.');
+    return;
+  }
+  console.log('Upcoming 10 events:');
+  events.map((event, i) => {
+    const start = event.start.dateTime || event.start.date;
+    console.log(`${start} - ${event.summary}`);
+  });
+}
 
-//DB connection
-const connectOptions = {
-  useNewUrlParser: true,
-  autoIndex: true,
-};
-mongoose.connect(process.env.MONGO_URI, connectOptions, (e) =>
-  e ? console.log(e) : console.log("DB connected successfully..")
-);
-
-const port = process.env.PORT;
-app.use("/communication", routerService);
-
-app.listen(port, () => {
-  console.log(
-    `Microservice ${process.env.SERVICE_NAME} is running on port ${port}.`
-  );
-});
-
-app.get("/", (req, res) => {
-  res.send("successfully connnected");
-});
-
-app.use(errHandle);
+authorize().then(listEvents).catch(console.error);``
