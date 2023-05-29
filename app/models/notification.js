@@ -11,7 +11,7 @@ const notificationSchema = new mongoose.Schema(
         return now.slice(0, 3) + now.slice(10, 13);
       },
     },
-    uerId: {
+    userId: {
         type: String,
         required: true,
       },

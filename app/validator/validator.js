@@ -170,6 +170,69 @@ const deleteScheduleValidation = (req, res, next) => {
 
 
 
+
+
+//notification module
+
+const notificationListValidation = (req, res, next) => {
+  const schema = joi.object({
+    search: joi.allow(null).allow(""),
+    isActive: joi.allow(null).allow(""),
+    limit: joi.number(),
+    page: joi.number(),
+  });
+  return queryParamValidation(req, res, next, schema);
+};
+
+const createNotificationValidation = (req, res, next) => {
+  const schema = joi.object({
+    userId: joi.string().optional(),
+    title: joi.string().optional(),
+    description: joi.string().optional(),
+    status: joi.string().optional(),
+    isRead: joi.boolean().optional(),
+    isActive: joi.boolean().optional(),
+  });
+  return bodyParamValidation(req, res, next, schema);
+};
+
+const getNotificationValidation = (req, res, next) => {
+  const querySchema = joi.object({
+    id: joi.string().allow(null).allow(""),
+  });
+  req.bodyParam = false;
+  queryParamValidation(req, res, next, querySchema);
+};
+
+const updateNotificationValidation = (req, res, next) => {
+  const querySchema = joi.object({
+    id: joi.string().allow(null).allow(""),
+
+  });
+  req.bodyParam = true;
+  queryParamValidation(req, res, next, querySchema);
+
+  const schema = joi.object({
+    userId: joi.string().optional(),
+    title: joi.string().optional(),
+    description: joi.string().optional(),
+    status: joi.string().optional(),
+    isRead: joi.boolean().optional(),
+    isActive: joi.boolean().optional(),
+  });
+  return bodyParamValidation(req, res, next, schema);
+};
+
+const deleteNotificationValidation = (req, res, next) => {
+  const querySchema = joi.object({
+    id: joi.string().allow(null).allow(""),
+  });
+  req.bodyParam = false;
+  queryParamValidation(req, res, next, querySchema);
+};
+
+
+
 module.exports = {
   bodyParamValidation,
   queryParamValidation,
@@ -183,4 +246,10 @@ module.exports = {
   getScheduleValidation,
   updateScheduleValidation,
   deleteScheduleValidation,
+
+  notificationListValidation,
+  createNotificationValidation,
+  getNotificationValidation,
+  updateNotificationValidation,
+  deleteNotificationValidation
 };
