@@ -24,7 +24,6 @@ const args = process.argv.slice(2)[0];
 process.env.CONFIG_ARG = args;
 let CONFIG = require('./app/configs/config')(args)
 process.env = { ...process.env,...CONFIG}
-console.log('process.env',process.env)
 
 
 app.use(urlencoded({ extended: false }));
