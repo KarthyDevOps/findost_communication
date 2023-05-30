@@ -201,6 +201,185 @@
         }
       }
     },
+    "/notification-management/create": {
+      "post": {
+        "tags": ["Notification History Management"],
+        "security": [{ "Bearer": [] }],
+        "summary": "Create new history management type",
+        "parameters": [
+          {
+            "name": "createHistoryManagementTemplate",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/createHistoryTemplateSchema"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/notification-management/update": {
+      "put": {
+        "tags": ["Notification History Management"],
+        "security": [{ "Bearer": [] }],
+        "summary": "update historyTemplate type",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "createNotificationTemplate",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/updateHistoryTemplateSchema"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/notification-management/get": {
+      "get": {
+        "tags": ["Notification History Management"],
+        "security": [{ "Bearer": [] }],
+        "summary": "get createNotificationTemplate details",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/notification-management/list": {
+      "get": {
+        "tags": ["Notification History Management"],
+        "security": [{ "Bearer": [] }],
+        "summary": "List all categories",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "type": "number"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "type": "number"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
+    "/notification-management/delete": {
+      "delete": {
+        "tags": ["Notification History Management"],
+        "security": [{ "Bearer": [] }],
+        "summary": "delete createNotificationTemplate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Return a JSON response with submitted Aman form details.",
+            "schema": { "$ref": "#/definitions/response" }
+          },
+          "404": {
+            "description": "Validation failure.",
+            "schema": {
+              "$ref": "#/definitions/validationError"
+            }
+          },
+          "default": {
+            "description": "Unexpected error.",
+            "schema": {
+              "$ref": "#/definitions/error"
+            }
+          }
+        }
+      }
+    },
     "/schedule/create": {
       "post": {
         "tags": ["schedule Module"],
@@ -234,8 +413,7 @@
           }
         }
       }
-    },
-   
+    }, 
     "/schedule/update": {
       "put": {
         "tags": ["schedule Module"],
@@ -408,6 +586,44 @@
         },
         "description": {
           "type": "string"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      }
+    },
+    "createHistoryTemplateSchema": {
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "isRead": {
+          "type": "boolean"
+        },
+        "isActive": {
+          "type": "boolean"
+        }
+      }
+    },
+    "updateHistoryTemplateSchema": {
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "isRead": {
+          "type": "boolean"
         },
         "isActive": {
           "type": "boolean"
