@@ -186,7 +186,7 @@ const notificationListValidation = (req, res, next) => {
 
 const createNotificationValidation = (req, res, next) => {
   const schema = joi.object({
-    userId: joi.string().optional(),
+    userId: joi.array().optional(),
     title: joi.string().optional(),
     description: joi.string().optional(),
     status: joi.string().optional(),
@@ -213,7 +213,7 @@ const updateNotificationValidation = (req, res, next) => {
   queryParamValidation(req, res, next, querySchema);
 
   const schema = joi.object({
-    userId: joi.string().optional(),
+    userId: joi.array().optional(),
     title: joi.string().optional(),
     description: joi.string().optional(),
     status: joi.string().optional(),

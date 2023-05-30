@@ -12,7 +12,7 @@ const notificationSchema = new mongoose.Schema(
       },
     },
     userId: {
-        type: String,
+        type: Array,
         required: true,
       },
     title: {
