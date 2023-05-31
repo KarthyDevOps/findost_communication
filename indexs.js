@@ -1,67 +1,127 @@
-const express = require("express");
-const urlencoded = express.urlencoded;
-const cookieParser = require("cookie-parser");
-const process = require("process");
-const dotenv = require("dotenv");
-const path = require("path");
-const mongoose = require("mongoose");
-var Schema = mongoose.Schema;
-var cors = require('cors')
-const bodyParser = require("body-parser");
-const routerService = require("./app/router/router");
-const { errHandle } = require("./app/middlewares/errorHandler");
-const swaggerUi = require("swagger-ui-express");
-const swaggerDocument = require("./app/swagger/swagger.json");
-const exp = require("constants");
+const express = require('express');
+
+
+const {google} = require('googleapis');
+
 const app = express();
 
-//swagger setup
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const PORT = 8000
 
-// Load environment variable
-dotenv.config({ path: path.join(process.cwd(), `${process.argv[2]}`) });
+const dayjs = require("dayjs")
 
-app.use(urlencoded({ extended: false }));
-app.use(cors());
-app.use(bodyParser.json());
-app.use(cookieParser());
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "*");
-  next();
+const calendar =  google.calendar({
+  version:"v3",
+  auth:process.env.API_KEY
+})
+
+const oauth2client = new google.auth.OAuth2(
+  "108197355321-8ov3shvk1dm0c0sslvu00bc2o503c9u1.apps.googleusercontent.com",
+  "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",
+  "http://localhost:8000/google/redirect"
+)
+
+let Scopes =  'https://www.googleapis.com/auth/calendar'
+
+app.get("/google",(req,res)=>{
+try {
+  const url  = oauth2client.generateAuthUrl({
+    access_type:"offline",
+    scope: Scopes//'https://www.googleapis.com/auth/calender',
+    
+    })
+  console.log('url-->', url)
+  res.redirect(url)
+} catch (error) {
+  console.log("error",error)
+}
+})
+app.get("/google/redirect", async (req, res) => {
+  const code = req.query.code;
+
+  const { tokens } = await oauth2client.getToken(code);
+  oauth2client.setCredentials(tokens);
+  res.send("you have sucessfully logged in");
 });
 
-app.use(express.static(__dirname + "/assets"));
+app.get("/schedule",async(req,res)=>{
+ try {
+  console.log("data-->",oauth2client.credentials.access_token);
 
-var numOfRequest = 1;
-app.use((req, res, next) => {
-  req.startTime = Date.now();
-  req.numOfRequest = numOfRequest;
-  numOfRequest++;
-  console.log("Hit : " + req.originalUrl);
-  next();
-});
+// Refer to the Node.js quickstart on how to setup the environment:
+// https://developers.google.com/calendar/quickstart/node
+// Change the scope to 'https://www.googleapis.com/auth/calendar' and delete any
+// stored credentials.
 
-//DB connection
-const connectOptions = {
-  useNewUrlParser: true,
-  autoIndex: true,
-};
-mongoose.connect(process.env.MONGO_URI, connectOptions, (e) =>
-  e ? console.log(e) : console.log("DB connected successfully..")
-);
+// const event = {
+//   'summary': 'DoodleBlue Company',
+//   'location': 'RamanathaPuram',
+//   'description': 'Kishore Testing',
+//   start:{
+//     dateTime: "2023-05-30T06:54:47.277+00:00",
+//     timeZone: "Asia/kolkata",
+//    },
+//    'end':{
+//     'dateTime': "2023-05-30T06:54:47.277+00:00",
+//     'timeZone': "Asia/kolkata",
+//    },
+//   'recurrence': [
+//     'RRULE:FREQ=DAILY;COUNT=2'
+//   ],
+//   'attendees': [
+//     {'email': 'kishore.april28@gmail.com'}
+//   ],
+//   'reminders': {
+//     'useDefault': false,
+//     'overrides': [
+//       {'method': 'email', 'minutes': 24 * 60},
+//       {'method': 'popup', 'minutes': 10},
+//     ],
+//   },
+// };
 
-const port = process.env.PORT;
-app.use("/communication", routerService);
+// await calendar.events.insert({
+//   auth: oauth2client,
+//   calendarId: 'primary',
+//   resource: event,
+// }, function(err, event) {
+//   if (err) {
+//     console.log('There was an error contacting the Calendar service: ' + err);
+//     return;
+//   }
+//   console.log('Event created: %s', event.htmlLink);
+// });
 
-app.listen(port, () => {
-  console.log(
-    `Microservice ${process.env.SERVICE_NAME} is running on port ${port}.`
-  );
-});
 
-app.get("/", (req, res) => {
-  res.send("successfully connnected");
-});
+  await calendar.events.insert({
+   calendarId:"primary",
+   auth:oauth2client,
+   requestBody:{
+     summary: "this is a test event",
+     description:"welcome",
+     location:"ramnad0",
+     start:{
+      dateTime: "2023-05-31T06:54:47.277+00:00",
+      TimeZone: "Asia/kolkata",
+     },
+     end:{
+      dateTime: "2023-05-31T06:54:47.277+00:00",
+      TimeZone: "Asia/kolkata",
+     },
+     attendees: [
+          {email: 'kishore.april28@gmail.com'}
+        ],
+   }
+  },(err,event)=>{
+    if(err){
+   console.log('err', err)
+    }
+    console.log("data sucess sent")
+  })
+ } catch (error) {
+  console.log('error-->', error)
+ }
+})
 
-app.use(errHandle);
+app.listen(PORT,()=>{
+  console.log('server looking on the port', PORT)
+})
