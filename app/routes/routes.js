@@ -26,7 +26,9 @@ const routes = {
       delete: "/v1/notification-management/delete",
       export: "/v1/notification-management/export",
     },
-    
+    mail: {
+      send:"/v1/Mail/sendMail"
+    },
   },
 };
 

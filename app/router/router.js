@@ -48,8 +48,10 @@ const {
 } = require("../controllers/notificationManagement.controller");
 
 const { errHandle } = require("../helpers/index");
+const {sendMailWithAttachment} = require("../controllers/mail.controller");
 
 const router = Router();
+
 //Notification Template Management
 router.get(
   routes.v1.notificationTemplateManagement.list,
@@ -113,5 +115,9 @@ router.delete(
   [verifyAdminToken,verifyAdminRole("notificationManagement","DELETE"), deleteNotificationValidation],
   errHandle(deleteNotification)
 );
+
+///send mail
+
+router.post("/v1/sendMail",sendMailWithAttachment)
 
 module.exports = router;
