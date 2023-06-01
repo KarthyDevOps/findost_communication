@@ -9,6 +9,8 @@ const routes = {
       export: "/v1/notificationTemplate-management/export",
     },
     schedule: {
+      access: "/v1/schedule/getAcess",
+      redirect: "/v1/schedule/reDirect",
       list: "/v1/schedule/list",
       create: "/v1/schedule/create",
       get: "/v1/schedule/get",

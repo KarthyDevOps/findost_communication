@@ -3,6 +3,7 @@ const urlencoded = express.urlencoded;
 const cookieParser = require("cookie-parser");
 const process = require("process");
 const dotenv = require("dotenv");
+dotenv.config()
 const path = require("path");
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;

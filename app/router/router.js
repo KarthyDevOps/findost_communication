@@ -36,7 +36,9 @@ const { addSchedule,
   getScheduleById,
   updateSchedule,
   scheduleList,
-  deleteSchedule} = require("../controllers/schedule.controller")
+  deleteSchedule,
+  getAccess,
+  getToken} = require("../controllers/schedule.controller")
 const {
   notificationList,
   createNotification,
@@ -77,11 +79,14 @@ router.delete(
 
 
 //schedule module
+router.get(routes.v1.schedule.access,getAccess)
+router.get(routes.v1.schedule.redirect,getToken)
 router.post(routes.v1.schedule.create,[createScheduleValidation],addSchedule)
 router.get(routes.v1.schedule.list,[scheduleListValidation],scheduleList)
 router.put(routes.v1.schedule.update,[updateScheduleValidation],updateSchedule)
 router.delete(routes.v1.schedule.delete,[deleteScheduleValidation],deleteSchedule)
 router.get(routes.v1.schedule.get,[getScheduleValidation],getScheduleById)
+
 //Notification History Management
 router.get(
   routes.v1.notificationManagement.list,

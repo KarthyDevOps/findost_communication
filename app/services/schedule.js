@@ -1,17 +1,88 @@
 const { schedule } = require("../models/schedule");
 const { messages } = require("../response/customMesages");
 const { statusCodes } = require("../response/httpStatusCodes");
-const bcrypt = require("bcryptjs");
 const { statusMessage } = require("../response/httpStatusMessages");
-
 const {pageMetaService} = require("../helpers/index")
-//const { authorizedPersonsAddress } = require("../models/authorizedPerson-address");
-const moment = require("moment-timezone");
+const {google} = require('googleapis')
+
+
+
+const calendar =  google.calendar({
+  version:"v3",
+  auth:process.env.API_KEY
+})
+
+const oauth2client = new google.auth.OAuth2(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  process.env.REDIRECT_URL
+)
+
+let Scopes =  process.env.Google_Calender
+
+
 //ScheduleListService profile related api's
 
+const getAccessService = async (req, res) => {
+  try {
+    const url = oauth2client.generateAuthUrl({
+      access_type: "offline",
+      scope: Scopes,
+    });
+    if (url) {
+      console.log("url--->",url)
+      return url
+      //const code = req.query.code;
+      // const { tokens } = await oauth2client.getToken(code);
+      // oauth2client.setCredentials(tokens);
+    }
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+
 const addScheduleService = async (req, params) => {
-  console.log("params-->", params);
+  let code = "4/0AbUR2VPXyKxQaubiSNyggvOrzr-3bI2KoQCcxh3ytfFYKH_MF3JWr1T6buUSg93CwaHwIQ"
+  try {
+    const { tokens } = await oauth2client.getToken(code);
+    oauth2client.setCredentials(tokens);
+    
+  } catch (error) {
+    console.log('error', error)
+  }
+  console.log("params-->")
+ // console.log("data-->",oauth2client.credentials.access_token);
+
   //verify the given person already exist or not
+  try {
+    let data =  await calendar.events.insert({
+      calendarId:"primary",
+      auth:oauth2client,
+      requestBody:{
+        summary: "this is a test event",
+        description:"welcome",
+        location:"ramnad0",
+        start:{
+         dateTime: "2023-05-31T06:54:47.277+00:00",
+         TimeZone: "Asia/kolkata",
+        },
+        end:{
+         dateTime: "2023-05-31T06:54:47.277+00:00",
+         TimeZone: "Asia/kolkata",
+        },
+        attendees: [
+             {email: 'kishore.april28@gmail.com'}
+           ],
+      }
+     })
+
+  console.log("the data -->",data)
+  } catch (error) {
+    console.log('error', error)
+  }
+
+ 
+   delete params.code ;
 
   const scheduleData = await new schedule(params);
   const details = await scheduleData.save();
@@ -123,6 +194,7 @@ const ScheduleListService = async (params) => {
 };
 
 module.exports = {
+  getAccessService,
   addScheduleService,
   getScheduleByIdService,
   updateScheduleService,
