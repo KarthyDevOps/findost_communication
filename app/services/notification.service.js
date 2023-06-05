@@ -9,8 +9,7 @@ const {
   pageMetaService,
 } = require("../helpers/index");
 
-const { getNotificationList } = require("./list.service");
-
+const { getNotificationTemplateList } = require("./list.service");
 
 const createNotificationService = async (params) => {
   var newvalues = params;
@@ -42,7 +41,7 @@ const getNotificationService = async (params) => {
 const updateNotificationService = async (params) => {
   var payload = {
     _id: params?.notificationId,
-    isDeleted: false
+    isDeleted: false,
   };
   delete params["notificationId"];
   var newvalues = {
@@ -67,10 +66,10 @@ const updateNotificationService = async (params) => {
 
 const notificationListService = async (params) => {
   params.all = true;
-  const allList = await getNotificationList(params);
-  params.all = params.returnAll ==true ? true : false;
+  const allList = await getNotificationTemplateList(params);
+  params.all = params.returnAll == true ? true : false;
 
-  const result = await getNotificationList(params);
+  const result = await getNotificationTemplateList(params);
   const pageMeta = await pageMetaService(params, allList?.data?.length || 0);
   return {
     status: true,
@@ -82,8 +81,8 @@ const notificationListService = async (params) => {
 const deleteNotificationService = async (params) => {
   var payload = {
     _id: params?.notificationId,
-    isDeleted: false
-    };
+    isDeleted: false,
+  };
   var newvalues = {
     $set: { isDeleted: true },
   };
@@ -110,7 +109,7 @@ const deleteNotificationService = async (params) => {
 const exportNotificationService = async (res, params) => {
   //get all notification list created by admin
   params.all = true;
-  const notificationList = await getNotificationList(params);
+  const notificationList = await getNotificationTemplateList(params);
 
   // format notification data list
   params.type = "notification";
