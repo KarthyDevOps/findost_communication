@@ -2,7 +2,7 @@
 const express = require("express");
 const Router = express.Router;
 const { routes } = require("../routes/routes");
-const { verifyAdminToken,verifyAdminRole } = require("../middlewares/authentication");
+const { verifyToken,verifyAdminRole } = require("../middlewares/authentication");
 const {
   notificationTemplateListValidation,
   createNotificationTemplateValidation,
@@ -55,27 +55,27 @@ const router = Router();
 //Notification Template Management
 router.get(
   routes.v1.notificationTemplateManagement.list,
-  [verifyAdminToken,verifyAdminRole("notificationTemplateManagement","VIEW"), notificationTemplateListValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationTemplateManagement","VIEW"), notificationTemplateListValidation],
   errHandle(notificationTemplateList)
 );
 router.post(
   routes.v1.notificationTemplateManagement.create,
-  [verifyAdminToken,verifyAdminRole("notificationTemplateManagement","ADD"), createNotificationTemplateValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationTemplateManagement","ADD"), createNotificationTemplateValidation],
   errHandle(createNotificationTemplate)
 );
 router.get(
   routes.v1.notificationTemplateManagement.get,
-  [verifyAdminToken,verifyAdminRole("notificationTemplateManagement","VIEW"), getNotificationTemplateValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationTemplateManagement","VIEW"), getNotificationTemplateValidation],
   errHandle(getNotificationTemplate)
 );
 router.put(
   routes.v1.notificationTemplateManagement.update,
-  [verifyAdminToken,verifyAdminRole("notificationTemplateManagement","UPDATE"), updateNotificationTemplateValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationTemplateManagement","UPDATE"), updateNotificationTemplateValidation],
   errHandle(updateNotificationTemplate)
 );
 router.delete(
   routes.v1.notificationTemplateManagement.delete,
-  [verifyAdminToken,verifyAdminRole("notificationTemplateManagement","DELETE"), deleteNotificationTemplateValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationTemplateManagement","DELETE"), deleteNotificationTemplateValidation],
   errHandle(deleteNotificationTemplate)
 );
 
@@ -92,27 +92,27 @@ router.get(routes.v1.schedule.get,[getScheduleValidation],getScheduleById)
 //Notification History Management
 router.get(
   routes.v1.notificationManagement.list,
-  [verifyAdminToken,verifyAdminRole("notificationManagement","VIEW"), notificationListValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationManagement","VIEW"), notificationListValidation],
   errHandle(notificationList)
 );
 router.post(
   routes.v1.notificationManagement.create,
-  [verifyAdminToken,verifyAdminRole("notificationManagement","ADD"), createNotificationValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationManagement","ADD"), createNotificationValidation],
   errHandle(createNotification)
 );
 router.get(
   routes.v1.notificationManagement.get,
-  [verifyAdminToken,verifyAdminRole("notificationManagement","VIEW"), getNotificationValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationManagement","VIEW"), getNotificationValidation],
   errHandle(getNotification)
 );
 router.put(
   routes.v1.notificationManagement.update,
-  [verifyAdminToken,verifyAdminRole("notificationManagement","UPDATE"), updateNotificationValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationManagement","UPDATE"), updateNotificationValidation],
   errHandle(updateNotification)
 );
 router.delete(
   routes.v1.notificationManagement.delete,
-  [verifyAdminToken,verifyAdminRole("notificationManagement","DELETE"), deleteNotificationValidation],
+  [verifyToken(["ADMIN"]),verifyAdminRole("notificationManagement","DELETE"), deleteNotificationValidation],
   errHandle(deleteNotification)
 );
 
