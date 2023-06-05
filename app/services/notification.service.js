@@ -68,7 +68,7 @@ const updateNotificationService = async (params) => {
 const notificationListService = async (params) => {
   params.all = true;
   const allList = await getNotificationList(params);
-  params.all = false;
+  params.all = params.returnAll ==true ? true : false;
 
   const result = await getNotificationList(params);
   const pageMeta = await pageMetaService(params, allList?.data?.length || 0);
