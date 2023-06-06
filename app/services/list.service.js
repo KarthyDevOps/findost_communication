@@ -90,4 +90,5 @@ const getNotificationList = async (params) => {
 };
 module.exports = {
   getNotificationTemplateList,
+  getNotificationList
 };
