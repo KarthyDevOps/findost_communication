@@ -25,6 +25,7 @@ const notificationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
+      default: "Success",
     },
     isActive: {
       type: Boolean,
