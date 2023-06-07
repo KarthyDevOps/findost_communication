@@ -35,7 +35,7 @@ const verifyToken = (type = ["ADMIN"]) =>
             return sendErrorResponse(
               req,
               res,
-              statusCodes.HTTP_NOT_FOUND,
+              statusCodes.HTTP_UNAUTHORIZED,
               messages.adminInActive,
               []
             );
@@ -48,7 +48,7 @@ const verifyToken = (type = ["ADMIN"]) =>
           return sendErrorResponse(
             req,
             res,
-            statusCodes.HTTP_NOT_FOUND,
+            statusCodes.HTTP_UNAUTHORIZED,
             messages.tokenInvalid,
             []
           );
@@ -67,7 +67,7 @@ const verifyToken = (type = ["ADMIN"]) =>
       return sendErrorResponse(
         req,
         res,
-        statusCodes.HTTP_NOT_FOUND,
+        statusCodes.HTTP_UNAUTHORIZED,
         messages.tokenInvalid,
         []
       );
@@ -93,7 +93,7 @@ const verifyAdminRole = (roles, action) =>
       return sendErrorResponse(
         req,
         res,
-        statusCodes.HTTP_NOT_FOUND,
+        statusCodes.HTTP_UNAUTHORIZED,
         messages.accessDenied,
         []
       );
