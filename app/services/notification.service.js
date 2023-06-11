@@ -80,15 +80,20 @@ const notificationListService = async (params) => {
 };
 
 const deleteNotificationService = async (params) => {
-  var payload = {
-    _id: params?.notificationId,
-    isDeleted: false
-    };
+  let ids = [];
+  if (params.id) ids.push(params?.id);
+  else if (params.ids) {
+    ids = params.ids;
+  }
   var newvalues = {
-    $set: { isDeleted: true },
+    $set: {
+      isDeleted: true,
+      updatedBy: params?.updatedBy,
+      lastUpdatedBy: params?.lastUpdatedBy,
+    },
   };
 
-  const resp = await Notification.updateOne(payload, newvalues);
+  const resp = await Notification.updateMany({_id:ids}, newvalues);
   if (!resp.modifiedCount) {
     return {
       status: false,
