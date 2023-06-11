@@ -108,7 +108,11 @@ const {
   
   const deleteNotification = async (req, res) => {
     const params = req.body;
-    params.notificationId = req?.query?.notificationId;
+    if (req.query.id) {
+      params.id = req?.query?.id;
+    }
+    params.ids = req.body.ids;
+ 
     params.updatedBy = req?.user?._id?.toString();
     params.lastUpdatedBy = req?.user?.userType;
     params.userType = req?.user?.userType;
