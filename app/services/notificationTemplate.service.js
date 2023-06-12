@@ -75,7 +75,7 @@ const notificationTemplateListService = async (params) => {
   return {
     status: true,
     statusCode: statusCodes?.HTTP_OK,
-    data: { list: result?.data, pageMeta },
+    data: { list: result?.data || [], pageMeta },
   };
 };
 
