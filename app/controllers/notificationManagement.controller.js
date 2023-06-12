@@ -38,7 +38,7 @@ const {
   
   const getNotification = async (req, res) => {
     const params = req.body;
-    params.notificationId = req?.query?.notificationId;
+    params.notificationId = req?.query?.notificationId || req?.query?.id ;
     const result = await getNotificationService(params);
     if (!result.status) {
       return sendErrorResponse(
