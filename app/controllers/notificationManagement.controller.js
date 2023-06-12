@@ -10,7 +10,7 @@ const {
     deleteNotificationService,
     exportNotificationService,
   } = require("../services/notification.service");
-  
+
   const createNotification = async (req, res) => {
     const params = req.body;
     params.createdBy = req?.user?._id?.toString();
@@ -60,7 +60,7 @@ const {
   
   const updateNotification = async (req, res) => {
     const params = req.body;
-    params.notificationId = req?.query?.notificationId;
+    params.notificationId = req?.query?.notificationId || req?.query?.id ;
     params.updatedBy = req?.user?._id?.toString();
     params.lastUpdatedBy = req?.user?.userType;
     params.userType = req?.user?.userType;

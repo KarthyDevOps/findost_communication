@@ -8,6 +8,7 @@ const {
   formatDataList,
   pageMetaService,
 } = require("../helpers/index");
+const mongoose = require("mongoose");
 
 const { getNotificationList } = require("./list.service");
 
@@ -41,7 +42,7 @@ const getNotificationService = async (params) => {
 
 const updateNotificationService = async (params) => {
   var payload = {
-    _id: params?.notificationId,
+    _id: mongoose.Types.ObjectId(params?.notificationId),
     isDeleted: false
   };
   delete params["notificationId"];
@@ -49,6 +50,7 @@ const updateNotificationService = async (params) => {
     $set: params,
   };
   const resp = await Notification.updateOne(payload, newvalues);
+  console.log('resp',resp)
   if (!resp.modifiedCount) {
     return {
       status: false,
