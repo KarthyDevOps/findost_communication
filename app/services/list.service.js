@@ -53,30 +53,6 @@ const getNotificationTemplateList = async (params) => {
 const getNotificationList = async (params) => {
   let data;
   if (params.all) {
-<<<<<<< HEAD
-    if (params?.search) {
-      data = await Notification.find({
-        isDeleted: false,
-        $or: [
-          { notificationId: { $regex: `${params?.search}`, $options: "i" } },
-        ],
-      }).sort({ createdAt: -1 });
-    } else {
-      data = await Notification.find({
-        isDeleted: false,
-      });
-    }
-  } else if (params?.search) {
-    data = await Notification.find({
-      isDeleted: false,
-      $or: [
-        { notificationId: { $regex: `${params?.search}`, $options: "i" } },
-      ],
-    })
-      .skip((params.page - 1) * params.limit)
-      .limit(params.limit)
-      .sort({ createdAt: -1 });
-=======
     let filter = {
       isDeleted: false,
     };
@@ -90,7 +66,6 @@ const getNotificationList = async (params) => {
       ];
     }
     data = await Notification.find(filter);
->>>>>>> 95917201615205cdbbfd214acd3dbe150763659a
   } else {
     let filter = {
       isDeleted: false,
