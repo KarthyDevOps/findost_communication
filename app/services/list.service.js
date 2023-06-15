@@ -52,9 +52,7 @@ const getNotificationList = async (params) => {
       data = await Notification.find({
         isDeleted: false,
         $or: [
-          { title: { $regex: `${params?.search}`, $options: "i" } },
-          { content: { $regex: `${params?.search}`, $options: "i" } },
-          { type: { $regex: `${params?.search}`, $options: "i" } },
+          { notificationId: { $regex: `${params?.search}`, $options: "i" } },
         ],
       }).sort({ createdAt: -1 });
     } else {
@@ -66,9 +64,7 @@ const getNotificationList = async (params) => {
     data = await Notification.find({
       isDeleted: false,
       $or: [
-        { title: { $regex: `${params?.search}`, $options: "i" } },
-        { content: { $regex: `${params?.search}`, $options: "i" } },
-        { type: { $regex: `${params?.search}`, $options: "i" } },
+        { notificationId: { $regex: `${params?.search}`, $options: "i" } },
       ],
     })
       .skip((params.page - 1) * params.limit)
