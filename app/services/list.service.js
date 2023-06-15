@@ -1,40 +1,45 @@
 const { NotificationTemplate } = require("../models/notificationTemplate");
 const { Notification } = require("../models/notification");
-
-
 const getNotificationTemplateList = async (params) => {
   let data;
   if (params.all) {
-    if (params?.search) {
-      data = await NotificationTemplate.find({
-        isDeleted: false,
-        $or: [
-          { title: { $regex: `${params?.search}`, $options: "i" } },
-          { content: { $regex: `${params?.search}`, $options: "i" } },
-          { type: { $regex: `${params?.search}`, $options: "i" } },
-        ],
-      }).sort({ createdAt: -1 });
-    } else {
-      data = await NotificationTemplate.find({
-        isDeleted: false,
-      });
+    let filter = {
+      isDeleted: false,
+    };
+    if ([true, false].includes(params?.isActive)) {
+      filter.isActive = params.isActive;
     }
-  } else if (params?.search) {
-    data = await NotificationTemplate.find({
-      isDeleted: false,
-      $or: [
+    if (params?.search) {
+      filter.$or = [
         { title: { $regex: `${params?.search}`, $options: "i" } },
-        { content: { $regex: `${params?.search}`, $options: "i" } },
-        { type: { $regex: `${params?.search}`, $options: "i" } },
-      ],
-    })
-      .skip((params.page - 1) * params.limit)
-      .limit(params.limit)
-      .sort({ createdAt: -1 });
+        {
+          notificationTemplateId: {
+            $regex: `${params?.search}`,
+            $options: "i",
+          },
+        },
+      ];
+    }
+    data = await NotificationTemplate.find(filter);
   } else {
-    data = await NotificationTemplate.find({
+    let filter = {
       isDeleted: false,
-    })
+    };
+    if ([true, false].includes(params?.isActive)) {
+      filter.isActive = params.isActive;
+    }
+    if (params?.search) {
+      filter.$or = [
+        { title: { $regex: `${params?.search}`, $options: "i" } },
+        {
+          notificationTemplateId: {
+            $regex: `${params?.search}`,
+            $options: "i",
+          },
+        },
+      ];
+    }
+    data = await NotificationTemplate.find(filter)
       .skip((params.page - 1) * params.limit)
       .limit(params.limit)
       .sort({ createdAt: -1 });
@@ -48,6 +53,7 @@ const getNotificationTemplateList = async (params) => {
 const getNotificationList = async (params) => {
   let data;
   if (params.all) {
+<<<<<<< HEAD
     if (params?.search) {
       data = await Notification.find({
         isDeleted: false,
@@ -70,10 +76,35 @@ const getNotificationList = async (params) => {
       .skip((params.page - 1) * params.limit)
       .limit(params.limit)
       .sort({ createdAt: -1 });
-  } else {
-    data = await Notification.find({
+=======
+    let filter = {
       isDeleted: false,
-    })
+    };
+    if ([true, false].includes(params?.isActive)) {
+      filter.isActive = params.isActive;
+    }
+    if (params?.search) {
+      filter.$or = [
+        { title: { $regex: `${params?.search}`, $options: "i" } },
+        { notificationId: { $regex: `${params?.search}`, $options: "i" } },
+      ];
+    }
+    data = await Notification.find(filter);
+>>>>>>> 95917201615205cdbbfd214acd3dbe150763659a
+  } else {
+    let filter = {
+      isDeleted: false,
+    };
+    if ([true, false].includes(params?.isActive)) {
+      filter.isActive = params.isActive;
+    }
+    if (params?.search) {
+      filter.$or = [
+        { title: { $regex: `${params?.search}`, $options: "i" } },
+        { notificationId: { $regex: `${params?.search}`, $options: "i" } },
+      ];
+    }
+    data = await Notification.find(filter)
       .skip((params.page - 1) * params.limit)
       .limit(params.limit)
       .sort({ createdAt: -1 });
@@ -86,5 +117,5 @@ const getNotificationList = async (params) => {
 };
 module.exports = {
   getNotificationTemplateList,
-  getNotificationList
+  getNotificationList,
 };

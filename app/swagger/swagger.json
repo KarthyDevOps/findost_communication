@@ -355,7 +355,7 @@
         "summary": "delete createNotificationTemplate",
         "parameters": [
           {
-            "name": "id",
+            "name": "notificationId",
             "in": "query",
             "type": "string"
           }

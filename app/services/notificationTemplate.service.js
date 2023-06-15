@@ -75,20 +75,25 @@ const notificationTemplateListService = async (params) => {
   return {
     status: true,
     statusCode: statusCodes?.HTTP_OK,
-    data: { list: result?.data, pageMeta },
+    data: { list: result?.data || [], pageMeta },
   };
 };
 
 const deleteNotificationTemplateService = async (params) => {
-  var payload = {
-    _id: params?.notificationTemplateId,
-    isDeleted: false
-    };
+  let ids = [];
+  if (params.id) ids.push(params?.id); else if (params.ids) {
+    ids = params.ids
+  }
+
   var newvalues = {
-    $set: { isDeleted: true },
+    $set: {
+      isDeleted: true,
+      updatedBy: params?.updatedBy,
+      lastUpdatedBy: params?.lastUpdatedBy,
+    },
   };
 
-  const resp = await NotificationTemplate.updateOne(payload, newvalues);
+  const resp = await NotificationTemplate.updateMany({_id:ids}, newvalues);
   if (!resp.modifiedCount) {
     return {
       status: false,

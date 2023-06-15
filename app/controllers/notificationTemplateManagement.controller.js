@@ -108,7 +108,10 @@ const notificationTemplateList = async (req, res) => {
 
 const deleteNotificationTemplate = async (req, res) => {
   const params = req.body;
-  params.notificationTemplateId = req?.query?.notificationTemplateId;
+  if (req.query.id) {
+    params.id = req?.query?.id;
+  }
+  params.ids = req.body.ids;
   params.updatedBy = req?.user?._id?.toString();
   params.lastUpdatedBy = req?.user?.userType;
   params.userType = req?.user?.userType;

@@ -10,7 +10,7 @@ const {
     deleteNotificationService,
     exportNotificationService,
   } = require("../services/notification.service");
-  
+
   const createNotification = async (req, res) => {
     const params = req.body;
     params.createdBy = req?.user?._id?.toString();
@@ -38,7 +38,7 @@ const {
   
   const getNotification = async (req, res) => {
     const params = req.body;
-    params.notificationId = req?.query?.notificationId;
+    params.notificationId = req?.query?.notificationId || req?.query?.id ;
     const result = await getNotificationService(params);
     if (!result.status) {
       return sendErrorResponse(
@@ -60,7 +60,7 @@ const {
   
   const updateNotification = async (req, res) => {
     const params = req.body;
-    params.notificationId = req?.query?.notificationId;
+    params.notificationId = req?.query?.notificationId || req?.query?.id ;
     params.updatedBy = req?.user?._id?.toString();
     params.lastUpdatedBy = req?.user?.userType;
     params.userType = req?.user?.userType;
@@ -108,7 +108,11 @@ const {
   
   const deleteNotification = async (req, res) => {
     const params = req.body;
-    params.notificationId = req?.query?.notificationId;
+    if (req.query.id) {
+      params.id = req?.query?.id;
+    }
+    params.ids = req.body.ids;
+ 
     params.updatedBy = req?.user?._id?.toString();
     params.lastUpdatedBy = req?.user?.userType;
     params.userType = req?.user?.userType;
