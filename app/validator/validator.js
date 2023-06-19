@@ -115,20 +115,21 @@ const scheduleListValidation = (req, res, next) => {
   const schema = joi.object({
     search: joi.allow(null).allow(""),
     isActive: joi.allow(null).allow(""),
-    limit: joi.number(),
-    page: joi.number(),
+    limit: joi.number().required(),
+    page: joi.number().required(),
   });
   return queryParamValidation(req, res, next, schema);
 };
 
 const createScheduleValidation = (req, res, next) => {
   const schema = joi.object({
-    scheduleName: joi.string().required(),
-    date: joi.string().required(),
-    time: joi.string().required(),
-    agenda: joi.string().required(),
-    notes: joi.string().required(),
-    isActive: joi.boolean().required(),
+    summary: joi.string().optional(),
+    description: joi.string().optional(),
+    location: joi.string().optional(),
+    startTime: joi.string().required(),
+    endTime: joi.string().required(),
+    email: joi.string().optional(),
+    mailType:joi.string().required()
   });
   return bodyParamValidation(req, res, next, schema);
 };

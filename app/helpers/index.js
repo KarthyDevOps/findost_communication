@@ -1,6 +1,7 @@
 
 
 const json2csv = require("json2csv").parse;
+const {google} = require('googleapis')
 const sendOTP = (mobileNumber, type = "customer") => {
   if (mobileNumber) {
     return 1234;
@@ -10,6 +11,7 @@ const sendOTP = (mobileNumber, type = "customer") => {
 const errHandle = (fn) => (req, res, next) => {
   Promise.resolve(fn(req, res, next)).catch(next);
 };
+
 const pageMetaService = async (params, count) => {
   try {
     console.log('params,count')
@@ -93,6 +95,17 @@ const convert_JSON_to_file = async (res, data, params) => {
   res.status(200).send(csvString);
   return res;
 };
+
+const oauth2client = new google.auth.OAuth2(
+  process.env.CLIENT_ID,
+  process.env.CLIENT_SECRET,
+  process.env.REDIRECT_URL
+)
+oauth2client.setCredentials({
+  refresh_token: process.env.REFRESH_TOKEN
+});
+
+
 module.exports = {
   sendOTP,
   errHandle,
@@ -100,4 +113,5 @@ module.exports = {
   formatDataList,
   faqDataAlignment,
   convert_JSON_to_file,
+  oauth2client
 };

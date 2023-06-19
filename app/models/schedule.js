@@ -12,28 +12,35 @@ const scheduleSchema = new mongoose.Schema(
         return now.slice(0, 3) + now.slice(10, 13);
       },
     },
-    scheduleName: {
+    eventId: {
+      type: String,
+      trim: true,
+    },
+    summary: {
+      type: String,
+      trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
+    },
+    startTime: {
       type: String,
       required: true,
       trim: true,
     },
-    date: {
-      type: String,
-      required: true,
-      trim: true,
-    },
-    time: {
+    endTime: {
       type: String,
       required: true,
       trim: true,
     },
     agenda: {
       type: String,
-      required: true,
+      trim: true,
     },
-    notes: {
+    mailType: {
       type: String,
-      required: false,
+      trim: true,
     },
     isActive: {
       type: Boolean,

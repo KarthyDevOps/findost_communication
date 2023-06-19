@@ -6,6 +6,7 @@ Rest.prototype.callApi = async (request) => {
     try {
         //console.log(request);
         let restResult = await axios(request);
+        console.log("restResult",restResult)
         return restResult?.data;
     } catch (err) {
         console.log('Error in Rest Call', err);

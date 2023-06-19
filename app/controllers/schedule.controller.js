@@ -1,11 +1,9 @@
-const mongoose = require("mongoose");
 const {
   sendErrorResponse,
   sendSuccessResponse,
 } = require("../response/response");
 
 const {
-  getAccessService,
     addScheduleService,
     getScheduleByIdService,
     updateScheduleService,
@@ -13,39 +11,8 @@ const {
     ScheduleListService, 
 } = require("../services/schedule");
 
-//schedule profile related api's
-
-const getAccess = async (req, res) => {
-  const params = req?.query?.code;
-  const result = await getAccessService(params);
-  res.redirect(result)
-};
-
-const getToken = async (req,res)=>{
-  const params = req?.query?.code
-  const result = await addScheduleService(req, params);
-  if (!result.status) {
-    return sendErrorResponse(
-      req,
-      res,
-      result?.statusCode,
-      result?.message,
-      result?.data
-    );
-  }
-  return sendSuccessResponse(
-    req,
-    res,
-    result?.statusCode,
-    result?.message,
-    result?.data
-  );
-};
-``
-
 const addSchedule = async (req, res) => {
   const params = req.body;
-  params.code = req.query.code
   params.createdBy = req?.user?._id?.toString();
   params.updatedBy = req?.user?._id?.toString();
   params.lastUpdatedBy = req?.user?.userType;
@@ -121,6 +88,7 @@ const updateSchedule = async (req, res) => {
 
 const scheduleList = async (req, res) => {
   const params = req?.query;
+  params.createdBy = req?.user?._id.toString()
   const result = await ScheduleListService(params);
   if (!result.status) {
     return sendErrorResponse(
@@ -165,8 +133,6 @@ const deleteSchedule = async (req, res) => {
 };
 
 module.exports = {
-  getAccess,
-  getToken,
     addSchedule,
     getScheduleById,
     updateSchedule,
