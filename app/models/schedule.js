@@ -1,16 +1,11 @@
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
+const {InternalServices} = require('../apiServices/index')
+  
 const scheduleSchema = new mongoose.Schema(
   {
     scheduleId: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      default: () => {
-        const now = Date.now().toString();
-        return now.slice(0, 3) + now.slice(10, 13);
-      },
+      type: String
     },
     eventId: {
       type: String,
@@ -64,6 +59,15 @@ const scheduleSchema = new mongoose.Schema(
 
   { timestamps: true }
 );
+
+scheduleSchema.pre('save', async function (next) {
+  InternalServices.getSequenceId({ type: "schedule" });
+  var doc = this;
+  let counter = await InternalServices.getSequenceId({ type: "schedule" });
+  doc.scheduleId = (counter?.data?.count + 1).toString().padStart(6, '0').toString();;
+  next();
+
+});
 
 const schedule = mongoose.model("schedule", scheduleSchema);
 

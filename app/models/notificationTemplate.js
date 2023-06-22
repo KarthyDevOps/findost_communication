@@ -1,15 +1,9 @@
 const mongoose = require("mongoose");
+const {InternalServices} = require('../apiServices/index')
 const notificationTemplateSchema = new mongoose.Schema(
   {
     notificationTemplateId: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      default: () => {
-        const now = Date.now().toString();
-        return now.slice(0, 3) + now.slice(10, 13);
-      },
+      type: String
     },
     title: {
       type: String,
@@ -32,5 +26,13 @@ const notificationTemplateSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+notificationTemplateSchema.pre('save', async function (next) {
+  InternalServices.getSequenceId({ type: "notificationTemplate" });
+  var doc = this;
+  let counter = await InternalServices.getSequenceId({ type: "notificationTemplate" });
+  doc.notificationTemplateId = (counter?.data?.count + 1).toString().padStart(6, '0').toString();;
+  next();
+
+});
 const NotificationTemplate = mongoose.model("notificationTemplate", notificationTemplateSchema);
 module.exports = { NotificationTemplate };

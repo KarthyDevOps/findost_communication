@@ -1,20 +1,14 @@
 const mongoose = require("mongoose");
+const { InternalServices } = require('../apiServices/index');
 const notificationSchema = new mongoose.Schema(
   {
     notificationId: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      default: () => {
-        const now = Date.now().toString();
-        return now.slice(0, 3) + now.slice(10, 13);
-      },
+      type: String
     },
     userId: {
-        type: Array,
-        required: true,
-      },
+      type: Array,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -44,6 +38,15 @@ const notificationSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+notificationSchema.pre('save', async function (next) {
+  InternalServices.getSequenceId({ type: "notification" });
+  var doc = this;
+  let counter = await InternalServices.getSequenceId({ type: "notification" });
+  doc.notificationId = (counter?.data?.count + 1).toString().padStart(6, '0').toString();;
+  next();
+
+});
+
 const Notification = mongoose.model(
   "notification",
   notificationSchema
