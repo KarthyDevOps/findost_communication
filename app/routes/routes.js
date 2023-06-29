@@ -27,7 +27,6 @@ const routes = {
       update: "/admin/v1/schedule/update",
       delete: "/admin/v1/schedule/delete",
       export: "/admin/v1/schedule/export",
-      list: "/a/v1/schedule/list",
     },
     notificationManagement: {
       list: "/v1/notification-management/list",
