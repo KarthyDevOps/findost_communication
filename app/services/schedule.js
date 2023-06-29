@@ -1,4 +1,4 @@
-const { schedule } = require("../models/schedule");
+const {schedule}  = require("../models/schedule");
 const { messages } = require("../response/customMesages");
 const { statusCodes } = require("../response/httpStatusCodes");
 const { statusMessage } = require("../response/httpStatusMessages");

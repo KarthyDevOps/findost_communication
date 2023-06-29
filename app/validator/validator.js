@@ -134,7 +134,27 @@ const createScheduleValidation = (req, res, next) => {
   return bodyParamValidation(req, res, next, schema);
 };
 
+const createAdminScheduleValidation = (req, res, next) => {
+  const schema = joi.object({
+    summary: joi.string().optional(),
+    description: joi.string().optional(),
+    location: joi.string().optional(),
+    startTime: joi.string().required(),
+    endTime: joi.string().required(),
+  });
+  return bodyParamValidation(req, res, next, schema);
+};
+
+
 const getScheduleValidation = (req, res, next) => {
+  const querySchema = joi.object({
+    id: joi.string().allow(null).allow(""),
+  });
+  req.bodyParam = false;
+  queryParamValidation(req, res, next, querySchema);
+};
+
+const getAdminScheduleValidation = (req, res, next) => {
   const querySchema = joi.object({
     id: joi.string().allow(null).allow(""),
   });
@@ -247,7 +267,8 @@ module.exports = {
   getScheduleValidation,
   updateScheduleValidation,
   deleteScheduleValidation,
-
+  createAdminScheduleValidation,
+  getAdminScheduleValidation,
   notificationListValidation,
   createNotificationValidation,
   getNotificationValidation,

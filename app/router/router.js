@@ -3,6 +3,7 @@ const express = require("express");
 const Router = express.Router;
 const { routes } = require("../routes/routes");
 const { verifyToken,verifyAdminRole } = require("../middlewares/authentication");
+
 const {
   notificationTemplateListValidation,
   createNotificationTemplateValidation,
@@ -15,6 +16,9 @@ const {
   getScheduleValidation,
   updateScheduleValidation,
   deleteScheduleValidation,
+
+  createAdminScheduleValidation,
+  getAdminScheduleValidation,
 
   notificationListValidation,
   createNotificationValidation,
@@ -31,7 +35,7 @@ const {
   deleteNotificationTemplate,
   exportNotificationTemplate,
 } = require("../controllers/notificationTemplateManagement.controller");
-
+const { addAdminSchedule,getAdminScheduleById,updateAdminSchedule,adminScheduleList,deleteAdminSchedule } = require('../controllers/adminSchedule.controller')
 const { addSchedule,
   getScheduleById,
   updateSchedule,
@@ -85,6 +89,17 @@ router.get(routes.v1.schedule.list,[verifyToken(["AP"]),scheduleListValidation],
 router.put(routes.v1.schedule.update,[updateScheduleValidation],updateSchedule)
 router.delete(routes.v1.schedule.delete,[deleteScheduleValidation],deleteSchedule)
 router.get(routes.v1.schedule.get,[getScheduleValidation],getScheduleById)
+
+
+// Admin Schedule Module
+router.post(routes.v1.adminSchedule.create,[verifyToken(["ADMIN"]),createAdminScheduleValidation],errHandle(addAdminSchedule))
+router.get(routes.v1.adminSchedule.list,[verifyToken(["ADMIN"]),scheduleListValidation],errHandle(adminScheduleList))
+router.put(routes.v1.adminSchedule.update,[updateScheduleValidation],errHandle(updateAdminSchedule))
+router.delete(routes.v1.adminSchedule.delete,[deleteScheduleValidation],errHandle(deleteAdminSchedule))
+router.get(routes.v1.adminSchedule.get,[getAdminScheduleValidation],errHandle(getAdminScheduleById))
+
+//show user to admin  created schedule
+router.get(routes.v1.adminSchedule.list,[verifyToken(["ADMIN"]),scheduleListValidation],errHandle(adminScheduleList))
 
 //Notification History Management
 router.get(

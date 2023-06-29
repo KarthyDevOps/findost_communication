@@ -53,10 +53,13 @@ const connectOptions = {
   useNewUrlParser: true,
   autoIndex: true,
 };
-mongoose.connect(process.env.MONGO_URI, connectOptions, (e) =>
-  e ? console.log(e) : console.log("DB connected successfully..")
-);
+const connectToMongo = async () => {
+  await mongoose.connect(process.env.MONGO_URI);
+  console.log("Connected to MongoDB Sucessfully!!");
+};
 
+connectToMongo();
+//initiative aws s3 buck
 const port = process.env.PORT;
 app.use("/communication", routerService);
 

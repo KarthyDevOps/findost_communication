@@ -18,6 +18,17 @@ const routes = {
       delete: "/v1/schedule/delete",
       export: "/v1/schedule/export",
     },
+    adminSchedule: {
+      access: "admin/v1/schedule/getAcess",
+      redirect: "/admin/v1/schedule/reDirect",
+      list: "/admin/v1/schedule/list",
+      create: "/admin/v1/schedule/create",
+      get: "/admin/v1/schedule/get",
+      update: "/admin/v1/schedule/update",
+      delete: "/admin/v1/schedule/delete",
+      export: "/admin/v1/schedule/export",
+      list: "/a/v1/schedule/list",
+    },
     notificationManagement: {
       list: "/v1/notification-management/list",
       create: "/v1/notification-management/create",
