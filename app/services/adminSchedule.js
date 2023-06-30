@@ -91,7 +91,7 @@ const deleteAdminScheduleService = async (params) => {
         },
     };
     //update ScheduleListService details into ScheduleListService table
-    const result = await adminSchedule.updateOne({ _id: ids }, query);
+    const result = await adminSchedule.updateMany({ _id: ids }, query);
     if (!result.modifiedCount) {
         return {
             status: false,
