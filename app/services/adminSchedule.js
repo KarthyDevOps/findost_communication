@@ -109,21 +109,46 @@ const deleteAdminScheduleService = async (params) => {
 };
 
 const adminScheduleListService = async (params) => {
-    console.log("params",params)
-    //get all ScheduleListService list
-    const allList = await adminSchedule.find({
-        isDeleted: false,
-        createdBy: params?.createdBy
-    });
-    console.log("allList", allList);
+    console.log("params", params)
+    let cond = {};
+    cond.isDeleted = false
+    let page = params?.page || 1;
+    page = Number(page);
+    let limit = params?.limit || 10;
+    limit = Number(limit);
 
+    if (params.search) {
+        cond.$or = [
+            { adminScheduleId: { $regex: `${params?.search}`, $options: "i" } },
+            { summary: { $regex: `${params?.search}`, $options: "i" } },
+        ];
+    }
+    if (params.isActive) {
+        cond.isActive = params?.isActive
+    }
+    //get all ScheduleListService list
+    let totalCount = await adminSchedule.find(cond).countDocuments();
+    let data = await adminSchedule.find(cond).sort({ createdAt: -1 }).skip(limit * (page - 1)).limit(limit);
     //calculate pagemeta for pages and count
-    const pageMeta = await pageMetaService(params, allList?.length || 0);
-    return {
-        status: true,
-        statusCode: statusCodes?.HTTP_OK,
-        data: { list: allList, pageMeta },
-    };
+    const pageMeta = await pageMetaService(params, totalCount);
+
+    if (data.length > 0) {
+        return {
+            status: true,
+            statusCode: statusCodes?.HTTP_OK,
+            data: { list: data, pageMeta },
+        };
+
+    }
+    else {
+        return {
+            status: false,
+            statusCode: statusCodes?.HTTP_OK,
+            data: { list: data, pageMeta },
+        };
+
+    }
+
 };
 
 module.exports = {
