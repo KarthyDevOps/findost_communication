@@ -92,11 +92,11 @@ router.get(routes.v1.schedule.get,[getScheduleValidation],getScheduleById)
 
 
 // Admin Schedule Module
-router.post(routes.v1.adminSchedule.create,[verifyToken(["ADMIN"]),createAdminScheduleValidation],errHandle(addAdminSchedule))
-router.get(routes.v1.adminSchedule.list,[verifyToken(["ADMIN"]),scheduleListValidation],errHandle(adminScheduleList))
-router.put(routes.v1.adminSchedule.update,[updateScheduleValidation],errHandle(updateAdminSchedule))
-router.delete(routes.v1.adminSchedule.delete,[deleteScheduleValidation],errHandle(deleteAdminSchedule))
-router.get(routes.v1.adminSchedule.get,[getAdminScheduleValidation],errHandle(getAdminScheduleById))
+router.post(routes.v1.adminSchedule.create,[verifyToken(["ADMIN"]),verifyAdminRole("scheduleManagement","ADD"),createAdminScheduleValidation],errHandle(addAdminSchedule))
+router.get(routes.v1.adminSchedule.list,[verifyToken(["ADMIN"]),verifyAdminRole("scheduleManagement","VIEW"),scheduleListValidation],errHandle(adminScheduleList))
+router.put(routes.v1.adminSchedule.update,[verifyToken(["ADMIN"]),verifyAdminRole("scheduleManagement","UPDATE"),updateScheduleValidation],errHandle(updateAdminSchedule))
+router.delete(routes.v1.adminSchedule.delete,[verifyToken(["ADMIN"]),verifyAdminRole("scheduleManagement","DELETE"),deleteScheduleValidation],errHandle(deleteAdminSchedule))
+router.get(routes.v1.adminSchedule.get,[verifyToken(["ADMIN"]),verifyAdminRole("scheduleManagement","VIEW"),getAdminScheduleValidation],errHandle(getAdminScheduleById))
 
 //show user to admin  created schedule
 router.get(routes.v1.adminSchedule.list,[verifyToken(["ADMIN"]),scheduleListValidation],errHandle(adminScheduleList))
