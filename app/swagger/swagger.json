@@ -556,7 +556,7 @@
     },
    
     "/admin/schedule/create": {
-      "put": {
+      "post": {
         "tags": ["Admin schedule Module"],
         "security": [{ "Bearer": [] }],
         "summary": "Create admin schedule Details",
