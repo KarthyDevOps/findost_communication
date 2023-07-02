@@ -565,7 +565,7 @@
             "name": "scheduleUpdate",
             "in": "body",
             "schema": {
-              "$ref": "#/definitions/adminSchedulecreate"
+              "$ref": "#/definitions/adminScheduleCreate"
             }
           }
         ],
