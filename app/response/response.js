@@ -28,7 +28,7 @@ const joierrors = (req, res, status, message, err) => {
 
   return res.status(status).json({
     status,
-    message,
+    message:error[Object.keys(error)[0]],
     error,
   });
 };
