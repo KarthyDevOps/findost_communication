@@ -812,44 +812,50 @@
     },
     "scheduleCreate": {
       "properties": {
-        "scheduleName": {
+        "summary": {
           "type": "string"
         },
-        "date": {
+        "description": {
           "type": "string"
         },
-        "time": {
+        "location": {
           "type": "string"
         },
-        "agenda": {
+        "startTime": {
           "type": "string"
         },
-        "notes": {
+        "endTime": {
           "type": "string"
         },
-        "isActive": {
+        "email": {
+          "type": "string"
+        },
+        "mailType": {
           "type": "string"
         }
       }
     },
     "scheduleUpdate": {
       "properties": {
-        "scheduleName": {
+        "summary": {
           "type": "string"
         },
-        "date": {
+        "description": {
           "type": "string"
         },
-        "time": {
+        "location": {
           "type": "string"
         },
-        "agenda": {
+        "startTime": {
           "type": "string"
         },
-        "notes": {
+        "endTime": {
           "type": "string"
         },
-        "isActive": {
+        "email": {
+          "type": "string"
+        },
+        "mailType": {
           "type": "string"
         }
       }
