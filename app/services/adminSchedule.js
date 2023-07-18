@@ -123,8 +123,11 @@ const adminScheduleListService = async (params) => {
             { summary: { $regex: `${params?.search}`, $options: "i" } },
         ];
     }
+    if(params.currentDate){
+        cond.date = params?.currentDate
+    }
     if (params.isActive) {
-        cond.isActive = params?.isActive
+        cond.isActive = params?.currentDate
     }
     //get all ScheduleListService list
     let totalCount = await adminSchedule.find(cond).countDocuments();

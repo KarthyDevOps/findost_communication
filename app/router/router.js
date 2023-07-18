@@ -99,7 +99,7 @@ router.delete(routes.v1.adminSchedule.delete,[verifyToken(["ADMIN"]),verifyAdmin
 router.get(routes.v1.adminSchedule.get,[verifyToken(["ADMIN"]),verifyAdminRole("scheduleManagement","VIEW"),getAdminScheduleValidation],errHandle(getAdminScheduleById))
 
 //show user to admin  created schedule
-router.get(routes.v1.adminSchedule.list,[verifyToken(["ADMIN"]),scheduleListValidation],errHandle(adminScheduleList))
+router.get(routes.v1.adminSchedule.mobileList,errHandle(adminScheduleList))
 
 //Notification History Management
 router.get(

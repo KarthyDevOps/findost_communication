@@ -24,6 +24,7 @@ const routes = {
       get: "/v1/admin/schedule/get",
       update: "/v1/admin/schedule/update",
       delete: "/v1/admin/schedule/delete",
+      mobileList: "/v1/mobile/schedule/list",
     },
     notificationManagement: {
       list: "/v1/notification-management/list",
