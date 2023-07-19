@@ -14,6 +14,7 @@ const {
 
 const addSchedule = async (req, res) => {
   const params = req.body;
+   params.apId = req?.user?._id;
   params.createdBy = req?.user?._id?.toString();
   params.updatedBy = req?.user?._id?.toString();
   params.lastUpdatedBy = req?.user?.userType;
