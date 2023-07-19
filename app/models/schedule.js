@@ -11,6 +11,10 @@ const scheduleSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    apId : {
+      type: String,
+      trim: true,
+    },
     summary: {
       type: String,
       trim: true,
