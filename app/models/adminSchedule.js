@@ -66,9 +66,7 @@ const adminScheduleSchema = new mongoose.Schema(
     updatedBy: {
       type: Schema.Types.ObjectId,
       required: false,
-    },
-    token: String,
-    otp: String,
+    }
   },
 
   {

@@ -30,12 +30,12 @@ const scheduleSchema = new mongoose.Schema(
       trim: true,
     },
     startTime: {
-      type: String,
+      type: Date,
       required: true,
       trim: true,
     },
     endTime: {
-      type: String,
+      type: Date,
       required: true,
       trim: true,
     },

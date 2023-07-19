@@ -492,6 +492,16 @@
         "summary": "List all schedule",
         "parameters": [
           {
+            "name": "isExport",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
+            "name": "returnAll",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
             "name": "limit",
             "in": "query",
             "type": "number"
@@ -500,6 +510,11 @@
             "name": "page",
             "in": "query",
             "type": "number"
+          },
+          {
+            "name": "filterDate",
+            "in": "query",
+            "type": "string"
           }
         ],
         "responses": {
@@ -667,6 +682,17 @@
         "summary": "List all admin schedule",
         "parameters": [
           {
+            "name": "isExport",
+            "in": "query",
+            "type": "boolean"
+          },
+          
+          {
+            "name": "returnAll",
+            "in": "query",
+            "type": "boolean"
+          },
+          {
             "name": "limit",
             "in": "query",
             "type": "number"
@@ -678,6 +704,11 @@
           },
           {
             "name": "search",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "currentDate",
             "in": "query",
             "type": "string"
           }
@@ -879,6 +910,15 @@
         },
         "imageUrl": {
           "type": "string"
+        },
+        "agenda": {
+          "type": "string"
+        },
+        "speakerName": {
+          "type": "string"
+        },
+        "place": {
+          "type": "string"
         }
       }
     },
@@ -900,6 +940,15 @@
           "type": "string"
         },
         "imageUrl": {
+          "type": "string"
+        },
+        "agenda": {
+          "type": "string"
+        },
+        "speakerName": {
+          "type": "string"
+        },
+        "place": {
           "type": "string"
         }
       }
