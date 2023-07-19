@@ -10,7 +10,8 @@ const scheduleSchema = new mongoose.Schema(
     type : {
       type: String,
       trim: true,
-      enum: ["MY SCHEDULE", "FINDOC","ECONOMICS","CORPORATE"]
+      enum: ["MY SCHEDULE", "FINDOC","ECONOMICS","CORPORATE"],
+      default : "MY SCHEDULE"
     },
     eventId: {
       type: String,
