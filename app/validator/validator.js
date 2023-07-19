@@ -123,16 +123,25 @@ const scheduleListValidation = (req, res, next) => {
 
 const createScheduleValidation = (req, res, next) => {
   const schema = joi.object({
-    summary: joi.string().optional(),
-    description: joi.string().optional(),
-    location: joi.string().optional(),
+    summary: joi.string().required(),
+    description: joi.string().required(),
     startTime: joi.string().required(),
-    endTime: joi.string().required(),
-    email: joi.string().optional(),
-    mailType:joi.string().required()
+    agenda: joi.string().required(),
+ 
   });
   return bodyParamValidation(req, res, next, schema);
 };
+
+const syncCalandarScheduleValidation = (req, res, next) => {
+  const schema = joi.object({
+    id: joi.string().required(),
+    email: joi.string().required(),
+    mailType: joi.string().required(),
+ 
+  });
+  return bodyParamValidation(req, res, next, schema);
+};
+
 
 const createAdminScheduleValidation = (req, res, next) => {
   const schema = joi.object({
@@ -273,5 +282,6 @@ module.exports = {
   createNotificationValidation,
   getNotificationValidation,
   updateNotificationValidation,
-  deleteNotificationValidation
+  deleteNotificationValidation,
+  syncCalandarScheduleValidation
 };

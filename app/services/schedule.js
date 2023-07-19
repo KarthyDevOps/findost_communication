@@ -15,17 +15,8 @@ const calendar =  google.calendar({
 
 const addScheduleService = async (req, params) => {
   try {
-    let storeValue = {
-      summary:req?.body?.summary,
-      description:req?.body?.description,
-      startTime:req?.body?.startTime,
-      endTime:req?.body?.endTime,
-      agenda:req?.body?.agenda,
-      createdBy : params?.createdBy,
-      updatedBy : params?.createdBy,
-      lastUpdatedBy :params?.lastUpdatedBy,
-    }
-    let result = await schedule.create(storeValue)
+  
+    let result = await schedule.create(params)
     console.log('result', result)
     return {
       status: true,
@@ -33,7 +24,6 @@ const addScheduleService = async (req, params) => {
       message: messages?.scheduleCreated,
       data: result,
     };
-    
   } catch (error) {
     console.log('error -->', error)
    
@@ -74,6 +64,9 @@ const getScheduleByIdService = async (params) => {
 const updateScheduleService = async (params) => {
 
 
+ 
+
+
   const findData = await schedule.findOne({
     $or: [
       {
@@ -85,69 +78,131 @@ const updateScheduleService = async (params) => {
     ],
   });
 
+  console.log('findData', findData)
+
+  let storeValue = {
+    summary:findData?.summary,
+    description:findData?.description,
+    startTime:findData?.startTime,
+    endTime:findDatay?.endTime,
+    agenda:findData?.agenda,
+   eventId:createEvent?.data?.id,
+    createdBy : params?.createdBy,
+    updatedBy : params?.createdBy,
+    lastUpdatedBy :params?.lastUpdatedBy,
+    mailType:req?.body?.mailType
+  }
+
+ 
+  const id = params?.id;
+
+  var query = { $set: params };
+  console.log("id", id);
+  //update ScheduleListService details into ScheduleListService table
+  const result = await schedule.updateOne({ _id: id }, storeValue);
+  console.log("result -->", result);
+  if (!result.modifiedCount) {
+    return {
+      status: false,
+      statusCode: statusCodes?.HTTP_BAD_REQUEST,
+      message: messages?.userNotExist,
+      data: [],
+    };
+  }
+  return {
+    status: true,
+    statusCode: statusCodes?.HTTP_OK,
+    message: messages?.updated,
+    data: [],
+  };
+};
+const syncCalandarService = async (req,params) => {
+
+  const findData = await schedule.findOne({
+    $or: [
+      {
+        scheduleId: params.scheduleId,
+      },
+      {
+        _id: params.id,
+      },
+    ],
+  });
+  console.log('findData-->', findData)
+
   
   let startdate = moment(findData?.startTime);
   let endDate = moment(startdate).add(10, 'minutes');  
-  
-  let createEvent = await calendar.events.insert({
-    calendarId: "primary",
-    auth: oauth2client,
-    requestBody: {
-      summary: findData?.summary,
-      description: findData?.description,
-    //  location: "Ramnad",
-      start: {
-        dateTime: new Date(startdate), //"2023-07-31T06:54:47.277+00:00",
-        TimeZone: "Asia/kolkata",
-      },
-      end: {
-        dateTime: new Date(endDate), // "2023-07-31T06:54:47.277+00:00",
-        TimeZone: "Asia/kolkata",
-      },
-      attendees: [
-        { email:params?.email }
-      ],
+
+  if (params?.mailType == "GOOGLE") {
+
+    let createEvent = await calendar.events.insert({
+      calendarId: "primary",
+      auth: oauth2client,
+      requestBody: {
+        summary: findData?.summary,
+        description: findData?.description,
+        //  location: "Ramnad",
+        start: {
+          dateTime: new Date(startdate), //"2023-07-31T06:54:47.277+00:00",
+          TimeZone: "Asia/kolkata",
+        },
+        end: {
+          dateTime: new Date(endDate), // "2023-07-31T06:54:47.277+00:00",
+          TimeZone: "Asia/kolkata",
+        },
+        attendees: [
+          { email: params?.email }
+        ],
+      }
+    })
+    if (createEvent.data.status == "confirmed") {
+      let storeValue = {
+        summary: findData?.summary,
+        description: findData?.description,
+        startTime: findData?.startTime,
+        endTime: endDate,
+        agenda: findData?.agenda,
+        eventId: createEvent?.data?.id,
+        createdBy: params?.createdBy,
+        updatedBy: params?.createdBy,
+        lastUpdatedBy: params?.lastUpdatedBy,
+        mailType: params?.mailType
+      }
+      const result = await schedule.updateOne({ _id: findData?._id }, storeValue);
+      console.log("result -->", result);
+      if (!result.modifiedCount) {
+        return {
+          status: false,
+          statusCode: statusCodes?.HTTP_BAD_REQUEST,
+          message: messages?.userNotExist,
+          data: [],
+        };
+      }
+      return {
+        status: true,
+        statusCode: statusCodes?.HTTP_OK,
+        message: messages?.updated,
+        data: [],
+      };
+
     }
-  })
-  if (createEvent.data.status == "confirmed") {
-    let storeValue = {
-      summary: findData?.summary,
-      description: findData?.description,
-      startTime: findData?.startTime,
-      endTime: endDate,
-      agenda: findData?.agenda,
-      eventId: createEvent?.data?.id,
-      createdBy: params?.createdBy,
-      updatedBy: params?.createdBy,
-      lastUpdatedBy: params?.lastUpdatedBy,
-      mailType: params?.mailType
-    }
-    const result = await schedule.updateOne({ _id: findData?._id }, storeValue);
-    console.log("result -->", result);
-    if (!result.modifiedCount) {
+    else {
       return {
         status: false,
-        statusCode: statusCodes?.HTTP_BAD_REQUEST,
-        message: messages?.userNotExist,
+        statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
+        message: messages?.notInserted,
         data: [],
       };
     }
-    return {
-      status: true,
-      statusCode: statusCodes?.HTTP_OK,
-      message: messages?.updated,
-      data: [],
-    };
-  
   }
+
   else {
-    return {
-      status: false,
-      statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
-      message: messages?.notInserted,
-      data: [],
-    };
-  }``
+
+  }
+
+ 
+  
 };
 
 const deleteScheduleService = async (params) => {
@@ -198,4 +253,5 @@ module.exports = {
   updateScheduleService,
   deleteScheduleService,
   ScheduleListService,
+  syncCalandarService
 };
