@@ -33,6 +33,14 @@ const scheduleSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    speakerName: {
+      type: String,
+      trim: true,
+    },
+    place: {
+      type: String,
+      trim: true,
+    },
     mailType: {
       type: String,
       trim: true,
@@ -52,9 +60,7 @@ const scheduleSchema = new mongoose.Schema(
     updatedBy: {
       type: Schema.Types.ObjectId,
       required: false,
-    },
-    token: String,
-    otp: String,
+    }
   },
 
   { timestamps: true }

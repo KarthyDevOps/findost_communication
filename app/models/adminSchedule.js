@@ -35,6 +35,14 @@ const adminScheduleSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    speakerName: {
+      type: String,
+      trim: true,
+    },
+    place: {
+      type: String,
+      trim: true,
+    },
     imageUrl: {
       type: String,
       trim: true,
