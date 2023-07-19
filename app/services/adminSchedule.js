@@ -3,6 +3,8 @@ const { statusCodes } = require("../response/httpStatusCodes");
 const { statusMessage } = require("../response/httpStatusMessages");
 const { pageMetaService } = require("../helpers/index")
 const { adminSchedule } = require("../models/adminSchedule");
+const { getAdminScheduleList } = require("./list.service");
+
 
 const addAdminScheduleService = async (req, params) => {
     try {
@@ -109,49 +111,16 @@ const deleteAdminScheduleService = async (params) => {
 };
 
 const adminScheduleListService = async (params) => {
-    console.log("params", params)
-    let cond = {};
-    cond.isDeleted = false
-    let page = params?.page || 1;
-    page = Number(page);
-    let limit = params?.limit || 10;
-    limit = Number(limit);
-
-    if (params.search) {
-        cond.$or = [
-            { adminScheduleId: { $regex: `${params?.search}`, $options: "i" } },
-            { summary: { $regex: `${params?.search}`, $options: "i" } },
-        ];
-    }
-    if(params.currentDate){
-        cond.date = params?.currentDate
-    }
-    if (params.isActive) {
-        cond.isActive = params?.currentDate
-    }
-    //get all ScheduleListService list
-    let totalCount = await adminSchedule.find(cond).countDocuments();
-    let data = await adminSchedule.find(cond).sort({ createdAt: -1 }).skip(limit * (page - 1)).limit(limit);
-    //calculate pagemeta for pages and count
-    const pageMeta = await pageMetaService(params, totalCount);
-
-    if (data.length > 0) {
-        return {
-            status: true,
-            statusCode: statusCodes?.HTTP_OK,
-            data: { list: data, pageMeta },
-        };
-
-    }
-    else {
-        return {
-            status: false,
-            statusCode: statusCodes?.HTTP_OK,
-            data: { list: data, pageMeta },
-        };
-
-    }
-
+    params.all = true;
+    const allList = await getAdminScheduleList(params);
+    params.all = params.returnAll ==true ||  params.isExport ==true ? true : false;
+    const result = await getAdminScheduleList(params);
+    const pageMeta = await pageMetaService(params, allList?.data?.length || 0);
+    return {
+        status: true,
+        statusCode: statusCodes?.HTTP_OK,
+        data: { list: result?.data, pageMeta },
+    };
 };
 
 module.exports = {

@@ -7,6 +7,8 @@ const {google} = require('googleapis')
 const {oauth2client} = require('../helpers/index')
 const moment = require('moment')
 const { adminSchedule } = require("../models/adminSchedule");
+const { getMyScheduleList } = require("./list.service");
+
 const calendar =  google.calendar({
   version:"v3",
   auth:process.env.API_KEY
@@ -290,20 +292,17 @@ const deleteScheduleService = async (params) => {
   };
 };
 
-const ScheduleListService = async (params) => {
-  //get all ScheduleListService list
-  const allList = await schedule.find({
-    isDeleted: false,
-    createdBy:params?.createdBy
-  });
-  console.log("allList", allList);
 
-  //calculate pagemeta for pages and count
-  const pageMeta = await pageMetaService(params, allList?.length || 0);
+const ScheduleListService = async (params) => {
+  params.all = true;
+  const allList = await getMyScheduleList(params);
+  params.all = params.returnAll ==true ||  params.isExport ==true ? true : false;
+  const result = await getMyScheduleList(params);
+  const pageMeta = await pageMetaService(params, allList?.data?.length || 0);
   return {
-    status: true,
-    statusCode: statusCodes?.HTTP_OK,
-    data: { list: allList, pageMeta },
+      status: true,
+      statusCode: statusCodes?.HTTP_OK,
+      data: { list: result?.data, pageMeta },
   };
 };
 

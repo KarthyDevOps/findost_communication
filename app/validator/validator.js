@@ -115,8 +115,8 @@ const scheduleListValidation = (req, res, next) => {
   const schema = joi.object({
     search: joi.allow(null).allow(""),
     isActive: joi.allow(null).allow(""),
-    limit: joi.number().required(),
-    page: joi.number().required(),
+    limit: joi.allow(null).allow(""),
+    page:joi.allow(null).allow(""),
   });
   return queryParamValidation(req, res, next, schema);
 };
