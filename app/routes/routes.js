@@ -17,6 +17,7 @@ const routes = {
       update: "/v1/schedule/update",
       delete: "/v1/schedule/delete",
       export: "/v1/schedule/export",
+      syncCalandar:"/v1/schedule/syncCalandar"
     },
     adminSchedule: {
       list: "/v1/admin/schedule/list",

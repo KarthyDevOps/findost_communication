@@ -9,6 +9,7 @@ const {
     updateScheduleService,
     deleteScheduleService,
     ScheduleListService, 
+    syncCalandarService
 } = require("../services/schedule");
 
 const addSchedule = async (req, res) => {
@@ -34,6 +35,32 @@ const addSchedule = async (req, res) => {
     result?.data
   );
 };
+
+const syncCalendarSchedule = async (req, res) => {
+  const params = req.body;
+  params.id = req?.body?.id;
+  params.createdBy = req?.user?._id?.toString();
+  params.updatedBy = req?.user?._id?.toString();
+  params.lastUpdatedBy = req?.user?.userType;
+  const result = await syncCalandarService(req, params);
+  if (!result.status) {
+    return sendErrorResponse(
+      req,
+      res,
+      result?.statusCode,
+      result?.message,
+      result?.data
+    );
+  }
+  return sendSuccessResponse(
+    req,
+    res,
+    result?.statusCode,
+    result?.message,
+    result?.data
+  );
+};
+
 
 const getScheduleById = async (req, res) => {
   console.log("data");
@@ -86,6 +113,7 @@ const updateSchedule = async (req, res) => {
   );
 };
 
+
 const scheduleList = async (req, res) => {
   const params = req?.query;
   params.createdBy = req?.user?._id.toString()
@@ -137,5 +165,6 @@ module.exports = {
     getScheduleById,
     updateSchedule,
     scheduleList,
-    deleteSchedule
+    deleteSchedule,
+    syncCalendarSchedule
 };

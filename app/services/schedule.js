@@ -32,7 +32,6 @@ const addScheduleService = async (req, params) => {
       message: messages?.scheduleCreated,
       data: result,
     };
-    
   } catch (error) {
     console.log('error -->', error)
    
@@ -83,6 +82,59 @@ const updateScheduleService = async (params) => {
       },
     ],
   });
+
+  console.log('findData', findData)
+
+  let storeValue = {
+    summary:findData?.summary,
+    description:findData?.description,
+    startTime:findData?.startTime,
+    endTime:findDatay?.endTime,
+    agenda:findData?.agenda,
+   eventId:createEvent?.data?.id,
+    createdBy : params?.createdBy,
+    updatedBy : params?.createdBy,
+    lastUpdatedBy :params?.lastUpdatedBy,
+    mailType:req?.body?.mailType
+  }
+
+ 
+  const id = params?.id;
+
+  var query = { $set: params };
+  console.log("id", id);
+  //update ScheduleListService details into ScheduleListService table
+  const result = await schedule.updateOne({ _id: id }, storeValue);
+  console.log("result -->", result);
+  if (!result.modifiedCount) {
+    return {
+      status: false,
+      statusCode: statusCodes?.HTTP_BAD_REQUEST,
+      message: messages?.userNotExist,
+      data: [],
+    };
+  }
+  return {
+    status: true,
+    statusCode: statusCodes?.HTTP_OK,
+    message: messages?.updated,
+    data: [],
+  };
+};
+const syncCalandarService = async (req,params) => {
+console.log('params-->', params)
+
+  const findData = await schedule.findOne({
+    $or: [
+      {
+        scheduleId: params.scheduleId,
+      },
+      {
+        _id: params.id,
+      },
+    ],
+  });
+  console.log('findData-->', findData)
 
   
   let startdate = moment(findData?.startTime);
@@ -200,4 +252,5 @@ module.exports = {
   updateScheduleService,
   deleteScheduleService,
   ScheduleListService,
+  syncCalandarService
 };

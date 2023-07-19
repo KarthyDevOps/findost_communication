@@ -40,7 +40,8 @@ const { addSchedule,
   getScheduleById,
   updateSchedule,
   scheduleList,
-  deleteSchedule
+  deleteSchedule,
+  syncCalendarSchedule
 } = require("../controllers/schedule.controller")
 const {
   notificationList,
@@ -84,7 +85,8 @@ router.delete(
 
 
 //schedule module
-router.post(routes.v1.schedule.create,[verifyToken(["AP"]),createScheduleValidation],errHandle(addSchedule))
+router.post(routes.v1.schedule.create,[verifyToken(["AP"])],errHandle(addSchedule))
+router.post(routes.v1.schedule.syncCalandar,[verifyToken(["AP"])],errHandle(syncCalendarSchedule))
 router.get(routes.v1.schedule.list,[verifyToken(["AP"]),scheduleListValidation],scheduleList)
 router.put(routes.v1.schedule.update,[updateScheduleValidation],updateSchedule)
 router.delete(routes.v1.schedule.delete,[deleteScheduleValidation],deleteSchedule)

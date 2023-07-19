@@ -35,7 +35,7 @@ const scheduleSchema = new mongoose.Schema(
     },
     endTime: {
       type: String,
-      required: true,
+      required: false,
       trim: true,
     },
     agenda: {
