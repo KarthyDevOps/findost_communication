@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 const {InternalServices} = require('../apiServices/index')
-  
+const { getImageURL } = require("../utils/s3Utils")
 const scheduleSchema = new mongoose.Schema(
   {
     scheduleId: {
@@ -47,6 +47,10 @@ const scheduleSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    imageUrl: {
+      type: String,
+      trim: true,
+    },
     place: {
       type: String,
       trim: true,
@@ -73,8 +77,18 @@ const scheduleSchema = new mongoose.Schema(
     }
   },
 
-  { timestamps: true }
+  {
+    timestamps: true,
+    toObject: { getters: true },
+    toJSON: {
+      virtuals: true,
+      getters: true
+    }
+  }
 );
+scheduleSchema.virtual('imageUrlS3').get(function () {
+  return this.imageUrl ? getImageURL(this.imageUrl) : null;
+})
 
 scheduleSchema.pre('save', async function (next) {
   InternalServices.getSequenceId({ type: "schedule" });

@@ -25,7 +25,8 @@ const {
   getNotificationValidation,
   updateNotificationValidation,
   deleteNotificationValidation,
-  syncCalandarScheduleValidation
+  syncCalandarScheduleValidation,
+  syncMyScheduleValidation
 } = require("../validator/validator");
 
 const {
@@ -42,7 +43,8 @@ const { addSchedule,
   updateSchedule,
   scheduleList,
   deleteSchedule,
-  syncCalendarSchedule
+  syncCalendarSchedule,
+  addMySchedule
 } = require("../controllers/schedule.controller")
 const {
   notificationList,
@@ -86,7 +88,8 @@ router.delete(
 
 
 //schedule module
-router.post(routes.v1.schedule.create,[verifyToken(["AP"]),createScheduleValidation],errHandle(addSchedule))
+//router.post(routes.v1.schedule.create,[verifyToken(["AP"]),createScheduleValidation],errHandle(addSchedule))
+router.post(routes.v1.schedule.syncMySchedule,[verifyToken(["AP"]),syncMyScheduleValidation],errHandle(addMySchedule))
 router.post(routes.v1.schedule.syncCalandar,[verifyToken(["AP"]),syncCalandarScheduleValidation],errHandle(syncCalendarSchedule))
 router.get(routes.v1.schedule.list,[verifyToken(["AP"]),scheduleListValidation],scheduleList)
 router.put(routes.v1.schedule.update,[updateScheduleValidation],updateSchedule)

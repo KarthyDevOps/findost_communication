@@ -6,7 +6,7 @@ const {pageMetaService} = require("../helpers/index")
 const {google} = require('googleapis')
 const {oauth2client} = require('../helpers/index')
 const moment = require('moment')
-
+const { adminSchedule } = require("../models/adminSchedule");
 const calendar =  google.calendar({
   version:"v3",
   auth:process.env.API_KEY
@@ -27,7 +27,65 @@ const addScheduleService = async (req, params) => {
     console.log('error -->', error)
    
   }
+
 };
+
+const addMyScheduleService = async (req, params) => {
+  try {
+
+    if (params?.type == "FINDOC") {
+
+      let getAdminSchedule = await adminSchedule.findOne({
+        _id: params?.id
+      })
+
+      let date = getAdminSchedule?.date;
+      let startDate = getAdminSchedule?.startTime;
+      let endDate = getAdminSchedule?.endTime;
+
+      let startTime = moment(date + ' ' + startDate, 'YYYY-MM-DD HH:mm').format();
+      let endTime = moment(date + ' ' + endDate, 'YYYY-MM-DD HH:mm').format();
+      if (getAdminSchedule) {
+        let storeValue = {
+          summary: getAdminSchedule?.summary,
+          description: getAdminSchedule?.description,
+          startTime: startTime,
+          endTime: endTime,
+          agenda: getAdminSchedule?.agenda,
+          place: getAdminSchedule?.agenda,
+          speakerName: getAdminSchedule?.speakerName,
+          imageUrl: getAdminSchedule?.imageUrlS3,
+          createdBy: params?.createdBy,
+          updatedBy: params?.createdBy,
+          lastUpdatedBy: params?.lastUpdatedBy
+        }
+        let result = await schedule.create(storeValue)
+        console.log('result', result)
+        return {
+          status: true,
+          statusCode: statusCodes?.HTTP_OK,
+          message: messages?.scheduleCreated,
+          data: result,
+        };
+        }
+      else {
+        return {
+          status: false,
+          statusCode: statusCodes?.HTTP_BAD_REQUEST,
+          message: messages?.dataNotFound,
+          data: [],
+        };
+      }
+      }
+     
+    
+  } catch (error) {
+    console.log('error -->', error)
+
+  }
+};
+
+
 
 const getScheduleByIdService = async (params) => {
   console.log("params1");
@@ -255,5 +313,7 @@ module.exports = {
   updateScheduleService,
   deleteScheduleService,
   ScheduleListService,
-  syncCalandarService
+  syncCalandarService,
+  addMyScheduleService
+
 };

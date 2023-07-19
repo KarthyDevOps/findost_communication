@@ -12,7 +12,7 @@ const routes = {
       access: "/v1/schedule/getAcess",
       redirect: "/v1/schedule/reDirect",
       list: "/v1/schedule/list",
-      create: "/v1/schedule/create",
+      syncMySchedule: "/v1/schedule/syncMySchedule",
       get: "/v1/schedule/get",
       update: "/v1/schedule/update",
       delete: "/v1/schedule/delete",
