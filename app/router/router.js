@@ -88,7 +88,7 @@ router.delete(
 
 
 //schedule module
-//router.post(routes.v1.schedule.create,[verifyToken(["AP"]),createScheduleValidation],errHandle(addSchedule))
+router.post(routes.v1.schedule.create,[verifyToken(["AP"]),createScheduleValidation],errHandle(addSchedule))
 router.post(routes.v1.schedule.syncMySchedule,[verifyToken(["AP"]),syncMyScheduleValidation],errHandle(addMySchedule))
 router.post(routes.v1.schedule.syncCalandar,[verifyToken(["AP"]),syncCalandarScheduleValidation],errHandle(syncCalendarSchedule))
 router.get(routes.v1.schedule.list,[verifyToken(["AP"]),scheduleListValidation],scheduleList)
