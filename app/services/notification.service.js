@@ -42,7 +42,7 @@ const getNotificationService = async (params) => {
 
 const updateNotificationService = async (params) => {
   var payload = {
-    _id: mongoose.Types.ObjectId(params?.notificationId),
+    _id : new mongoose.Types.ObjectId(params?.notificationId),
     isDeleted: false
   };
   delete params["notificationId"];
