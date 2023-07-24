@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
 const {InternalServices} = require('../apiServices/index')
 const { getImageURL } = require("../utils/s3Utils")
+const {MAIL_TYPE} = require('../constants/index')
 const scheduleSchema = new mongoose.Schema(
   {
     scheduleId: {
@@ -58,6 +59,7 @@ const scheduleSchema = new mongoose.Schema(
     mailType: {
       type: String,
       trim: true,
+      enum: [MAIL_TYPE.GOOGLE,MAIL_TYPE.MICROSOFT],
     },
     isActive: {
       type: Boolean,

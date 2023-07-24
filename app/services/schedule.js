@@ -2,7 +2,7 @@ const {schedule}  = require("../models/schedule");
 const { messages } = require("../response/customMesages");
 const { statusCodes } = require("../response/httpStatusCodes");
 const { statusMessage } = require("../response/httpStatusMessages");
-const {pageMetaService} = require("../helpers/index")
+const {pageMetaService, getAuthenticatedClient} = require("../helpers/index")
 const {google} = require('googleapis')
 const {oauth2client} = require('../helpers/index')
 const moment = require('moment')
@@ -15,8 +15,7 @@ const calendar =  google.calendar({
 })
 
 const addScheduleService = async (req, params) => {
-  try {
-  
+  try {  
     let result = await schedule.create(params)
     console.log('result', result)
     return {
@@ -44,7 +43,6 @@ const addMyScheduleService = async (req, params) => {
       let date = getAdminSchedule?.date;
       let startDate = getAdminSchedule?.startTime;
       let endDate = getAdminSchedule?.endTime;
-
       let startTime = moment(date + ' ' + startDate, 'YYYY-MM-DD HH:mm').format();
       let endTime = moment(date + ' ' + endDate, 'YYYY-MM-DD HH:mm').format();
       if (getAdminSchedule) {
@@ -122,10 +120,6 @@ const getScheduleByIdService = async (params) => {
 
 const updateScheduleService = async (params) => {
 
-
- 
-
-
   const findData = await schedule.findOne({
     $or: [
       {
@@ -177,6 +171,23 @@ const updateScheduleService = async (params) => {
 };
 const syncCalandarService = async (req,params) => {
 
+  if (params.mailType == "GOOGLE" && !params.email) {
+    return {
+      status: false,
+      statusCode: statusCodes?.HTTP_BAD_REQUEST,
+      message: messages?.mailRequired,
+      data: [],
+    };
+  }
+  if (params.mailType == "MICROSOFT" && !req.body.accesstoken) {
+    return {
+      status: false,
+      statusCode: statusCodes?.HTTP_BAD_REQUEST,
+      message: messages?.accessTokenRequired,
+      data: [],
+    };
+  }
+
   const findData = await schedule.findOne({
     $or: [
       {
@@ -191,6 +202,7 @@ const syncCalandarService = async (req,params) => {
 
   
   let startdate = moment(findData?.startTime);
+
   let endDate = moment(startdate).add(10, 'minutes');  
 
   if (params?.mailType == "GOOGLE") {
@@ -255,15 +267,76 @@ const syncCalandarService = async (req,params) => {
       };
     }
   }
+  if (params?.mailType == "MICROSOFT") {
 
-  else {
+    const event = { 
+      subject: findData?.summary, 
+      body: {
+        contentType: 'text',
+        content:findData?.description
+      },   
+      start: { 
+        dateTime: new Date(startdate), 
+        timeZone: "India Standard Time", 
+      }, 
+      end: { 
+        dateTime: new Date(endDate), 
+        timeZone: "India Standard Time", 
+      }
+    }; 
 
-  }
+    let token = req?.body?.accesstoken;
 
- 
-  
-};
+    console.log("token-->",token)
 
+    let client = getAuthenticatedClient(token)
+
+    let microsoftCreateEvent = await client.api('/me/events').post(event)
+
+    console.log('microsoftCreateEvent-->', microsoftCreateEvent)
+
+    if (microsoftCreateEvent.createdDateTime) {
+      let storeValue = {
+        summary: findData?.summary,
+        description: findData?.description,
+        startTime: findData?.startTime,
+        endTime: endDate,
+        agenda: findData?.agenda,
+        eventId: microsoftCreateEvent?.iCalUId,
+        createdBy: params?.createdBy,
+        updatedBy: params?.createdBy,
+        lastUpdatedBy: params?.lastUpdatedBy,
+        mailType: params?.mailType
+      }
+      const result = await schedule.updateOne({ _id: findData?._id }, storeValue);
+      console.log("result -->", result);
+      if (!result.modifiedCount) {
+        return {
+          status: false,
+          statusCode: statusCodes?.HTTP_BAD_REQUEST,
+          message: messages?.userNotExist,
+          data: [],
+        };
+      }
+      return {
+        status: true,
+        statusCode: statusCodes?.HTTP_OK,
+        message: messages?.updated,
+        data: [],
+      };
+
+    }
+    console.log('datas--->', data)
+}
+else {
+  return {
+    status: false,
+    statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
+    message: messages?.notInserted,
+    data: [],
+  };
+}
+}
 const deleteScheduleService = async (params) => {
   const id = params?.id;
   var query = {

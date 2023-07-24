@@ -2,6 +2,8 @@
 
 const json2csv = require("json2csv").parse;
 const {google} = require('googleapis')
+const {Client} = require('@microsoft/microsoft-graph-client');
+require('isomorphic-fetch');
 const sendOTP = (mobileNumber, type = "customer") => {
   if (mobileNumber) {
     return 1234;
@@ -106,6 +108,24 @@ oauth2client.setCredentials({
 });
 
 
+function getAuthenticatedClient(token) {
+ 
+  let accessToken = token; 
+  const client = Client.init({
+    authProvider: async (done) => {
+      try {
+        done(null, accessToken);
+      } catch (err) {
+        console.log(JSON.stringify(err, Object.getOwnPropertyNames(err)));
+        done(err, null);
+      }
+    }
+  });
+
+  return client;
+}
+
+
 module.exports = {
   sendOTP,
   errHandle,
@@ -113,5 +133,6 @@ module.exports = {
   formatDataList,
   faqDataAlignment,
   convert_JSON_to_file,
-  oauth2client
+  oauth2client,
+  getAuthenticatedClient
 };

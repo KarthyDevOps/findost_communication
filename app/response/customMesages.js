@@ -11,6 +11,8 @@ const messages = {
   inserted: "Inserted Successfully",
   created: "Created Successfully",
   updated: "Updated Successfully",
+  mailRequired: "email required",
+  accessTokenRequired:"Access Token required",
   deleted: "Deleted Successfully",
   otpSendSuccessful: "OTP Sent Successfully",
   otpVerifySuccessful: "OTP Verified Successfully",

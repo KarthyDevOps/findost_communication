@@ -135,7 +135,6 @@ const createScheduleValidation = (req, res, next) => {
 const syncCalandarScheduleValidation = (req, res, next) => {
   const schema = joi.object({
     id: joi.string().required(),
-    email: joi.string().required(),
     mailType: joi.string().required(),
  
   });
