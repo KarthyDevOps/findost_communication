@@ -269,6 +269,19 @@ const deleteNotificationValidation = (req, res, next) => {
   queryParamValidation(req, res, next, querySchema);
 };
 
+const apNotificationListValidation = (req, res, next) => {
+  const schema = joi.object({
+    search: joi.allow(null).allow(""),
+    isActive: joi.allow(null).allow(""),
+    isRead: joi.boolean().optional(),
+    isActive: joi.allow(null).allow(""),
+    limit: joi.number().optional(),
+    page: joi.number().optional(),
+  });
+  return queryParamValidation(req, res, next, schema);
+};
+
+
 
 
 module.exports = {
@@ -292,5 +305,6 @@ module.exports = {
   updateNotificationValidation,
   deleteNotificationValidation,
   syncCalandarScheduleValidation,
-  syncMyScheduleValidation
+  syncMyScheduleValidation,
+  apNotificationListValidation
 };

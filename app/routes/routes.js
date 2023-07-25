@@ -36,6 +36,10 @@ const routes = {
       delete: "/v1/notification-management/delete",
       export: "/v1/notification-management/export",
     },
+    apNotificationManagement: {
+      list: "/v1/ap-notification-management/list",
+      update: "/v1/ap-notification-management/update",
+    },
     mail: {
       send:"/v1/Mail/sendMail"
     },

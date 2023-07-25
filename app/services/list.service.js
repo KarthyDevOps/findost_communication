@@ -3,6 +3,7 @@ const { Notification } = require("../models/notification");
 const { adminSchedule } = require("../models/adminSchedule");
 const { schedule } = require("../models/schedule");
 const moment = require('moment-timezone');
+const { apNotification } = require("../models/apNotification");
 
 const getNotificationTemplateList = async (params) => {
   let data;
@@ -83,6 +84,10 @@ const getNotificationList = async (params) => {
         { notificationId: { $regex: `${params?.search}`, $options: "i" } },
       ];
     }
+    if(params?.authorizedPersonId){
+      console.log('userId', params?.authorizedPersonId)
+      filter.authorizedPersonId = params.authorizedPersonId;
+    }
     data = await Notification.find(filter)
       .skip((params.page - 1) * params.limit)
       .limit(params.limit)
@@ -94,6 +99,64 @@ const getNotificationList = async (params) => {
     return { status: false, data: [] };
   }
 };
+const getApNotificationList = async (params) => {
+  let data;
+  if (params.all) {
+    let filter = {
+      isDeleted: false,
+    };
+    if ([true, false].includes(params?.isActive)) {
+      filter.isActive = params.isActive;
+    }
+    if (params?.isRead && params?.isRead.toLowerCase() == "true") filter.isRead = true;
+    if (params?.isRead && params?.isRead.toLowerCase() == "false") filter.isRead = false;
+    if(params?.id){
+      filter._id = params?.id;
+    }
+    if(params?.authorizedPersonId){
+      filter.authorizedPersonId = params.authorizedPersonId;
+    }
+    if (params?.search) {
+      filter.$or = [
+        { title: { $regex: `${params?.search}`, $options: "i" } },
+        { notificationId: { $regex: `${params?.search}`, $options: "i" } },
+      ];
+    }
+    data = await apNotification.find(filter);
+  } else {
+    let filter = {
+      isDeleted: false,
+    };
+    if ([true, false].includes(params?.isActive)) {
+      filter.isActive = params.isActive;
+    }
+    if (params?.isRead && params?.isRead.toLowerCase() == "true") filter.isRead = true;
+    if (params?.isRead && params?.isRead.toLowerCase() == "false") filter.isRead = false;
+    if (params?.search) {
+      filter.$or = [
+        { title: { $regex: `${params?.search}`, $options: "i" } },
+        { notificationId: { $regex: `${params?.search}`, $options: "i" } },
+      ];
+    }
+    if(params?.id){
+      filter._id = params?.id;
+    }
+    if(params?.authorizedPersonId){
+      console.log('userId', params?.authorizedPersonId)
+      filter.authorizedPersonId = params.authorizedPersonId;
+    }
+    data = await apNotification.find(filter)
+      .skip((params.page - 1) * params.limit)
+      .limit(params.limit)
+      .sort({ createdAt: -1 });
+  }
+  if (data && data.length) {
+    return { status: true, data: data };
+  } else {
+    return { status: false, data: [] };
+  }
+};
+
 
 const getAdminScheduleList = async (params) => {
   let data;
@@ -214,5 +277,6 @@ module.exports = {
   getNotificationTemplateList,
   getNotificationList,
   getAdminScheduleList,
-  getMyScheduleList
+  getMyScheduleList,
+  getApNotificationList
 };

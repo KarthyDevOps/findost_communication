@@ -30,6 +30,7 @@ const {
   deleteNotificationValidation,
   syncCalandarScheduleValidation,
   syncMyScheduleValidation,
+  apNotificationListValidation,
 } = require("../validator/validator");
 
 const {
@@ -66,6 +67,7 @@ const {
 
 const { errHandle } = require("../helpers/index");
 const { sendMailWithAttachment } = require("../controllers/mail.controller");
+const { apNotificationList, apUpdateNotification } = require("../controllers/apNotificationList.controller");
 
 const router = Router();
 
@@ -245,6 +247,10 @@ router.delete(
   ],
   errHandle(deleteNotification)
 );
+
+// ap notification 
+router.get(routes.v1.apNotificationManagement.list,[verifyToken(["ADMIN","AP"]),apNotificationListValidation],errHandle(apNotificationList))
+router.put(routes.v1.apNotificationManagement.update,[verifyToken(["AP"])],errHandle(apUpdateNotification))
 
 ///send mail
 

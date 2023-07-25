@@ -11,11 +11,21 @@ const {
 const mongoose = require("mongoose");
 
 const { getNotificationList } = require("./list.service");
+const { apNotification } = require("../models/apNotification");
 
 
 const createNotificationService = async (params) => {
   var newvalues = params;
   const resp = await Notification.create(newvalues);
+  for(let authorizedPersonId of newvalues.authorizedPersonId){
+    let newParams = {
+      title:params?.title,
+      description:params?.description,
+      authorizedPersonId:authorizedPersonId,
+      notificationId:resp?._id
+    };
+    const response = await apNotification.create(newParams);
+      }
   return {
     status: true,
     statusCode: statusCodes?.HTTP_OK,
@@ -49,16 +59,51 @@ const updateNotificationService = async (params) => {
   var newvalues = {
     $set: params,
   };
-  const resp = await Notification.updateOne(payload, newvalues);
-  console.log('resp',resp)
-  if (!resp.modifiedCount) {
-    return {
-      status: false,
-      statusCode: statusCodes?.HTTP_UNPROCESSABLE_ENTITY,
-      message: messages?.somethingWrong,
-      data: [],
+  const resp = await Notification.findOneAndUpdate(payload, newvalues);
+  console.log('resp--->', resp)
+  const response = await apNotification.find({
+    notificationId: resp._id,
+    isDeleted: false
+  });
+  let authorizedPersonList = response.map(x=>{
+   return x.authorizedPersonId
+  })
+  let differentAuthorizedPersonList = params.authorizedPersonId.filter(x => !authorizedPersonList.includes(x));
+
+  for(let apId of differentAuthorizedPersonList){
+    let newParams = {
+      title:params?.title,
+      description:params?.description,
+      authorizedPersonId:apId,
+      notificationId:resp?._id
     };
+    const apCreateResponse = await apNotification.create(newParams);
   }
+  console.log('response-->', response)
+
+  for(let updateNotification of response){
+    if(params.authorizedPersonId.indexOf(updateNotification.authorizedPersonId)>-1){
+      console.log('123-->')
+      const apUpdateresponse = await apNotification.findOneAndUpdate({
+        notificationId: updateNotification.notificationId,
+        authorizedPersonId:updateNotification?.authorizedPersonId
+       
+      },{
+        title:params?.title,
+        description:params?.description
+      });
+    }else{
+      const updateResponse = await apNotification.findOneAndUpdate({
+        notificationId: updateNotification.notificationId,
+        authorizedPersonId:updateNotification?.authorizedPersonId
+       
+      },{
+        isDeleted:true
+      });
+    }
+  }
+  console.log('resp',resp)
+
   return {
     status: true,
     statusCode: statusCodes?.HTTP_OK,

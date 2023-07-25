@@ -13,6 +13,7 @@ const {
 
   const createNotification = async (req, res) => {
     const params = req.body;
+   
     params.createdBy = req?.user?._id?.toString();
     params.updatedBy = req?.user?._id?.toString();
     params.lastUpdatedBy = req?.user?.userType;
