@@ -104,6 +104,7 @@ const getApNotificationList = async (params) => {
   if (params.all) {
     let filter = {
       isDeleted: false,
+      authorizedPersonId: params?.authorizedPersonId
     };
     if ([true, false].includes(params?.isActive)) {
       filter.isActive = params.isActive;
@@ -113,9 +114,9 @@ const getApNotificationList = async (params) => {
     if(params?.id){
       filter._id = params?.id;
     }
-    if(params?.authorizedPersonId){
-      filter.authorizedPersonId = params.authorizedPersonId;
-    }
+    // if(params?.authorizedPersonId){
+    //   filter.authorizedPersonId = params.authorizedPersonId;
+    // }
     if (params?.search) {
       filter.$or = [
         { title: { $regex: `${params?.search}`, $options: "i" } },
