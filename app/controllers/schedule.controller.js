@@ -13,12 +13,15 @@ const {
     addMyScheduleService,
 } = require("../services/schedule");
 
+const excelJs = require('exceljs')
+const moment = require("moment");
+
 const addSchedule = async (req, res) => {
   const params = req.body;
    params.apId = req?.user?._id;
   params.createdBy = req?.user?._id?.toString();
   params.updatedBy = req?.user?._id?.toString();
-  params.lastUpdatedBy = req?.user?.userType;
+    params.lastUpdatedBy = req?.user?.userType;
   const result = await addScheduleService(req, params);
   if (!result.status) {
     return sendErrorResponse(
