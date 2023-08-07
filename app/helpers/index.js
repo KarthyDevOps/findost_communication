@@ -1,5 +1,3 @@
-
-
 const json2csv = require("json2csv").parse;
 const {google} = require('googleapis')
 const {Client} = require('@microsoft/microsoft-graph-client');

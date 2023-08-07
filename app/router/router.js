@@ -33,6 +33,7 @@ const {
   apNotificationListValidation,
 } = require("../validator/validator");
 
+const { createAdminNotification,updateAdminNotification,deleteAdminNotification,getAdminNotification,adminNotificationList} = require("../controllers/adminNotification.controller")
 const {
   notificationTemplateList,
   createNotificationTemplate,
@@ -247,6 +248,14 @@ router.delete(
   ],
   errHandle(deleteNotification)
 );
+
+//admin Notification
+router.post(routes.v1.adminNotificationManagement.create,errHandle(createAdminNotification))
+router.get(routes.v1.adminNotificationManagement.list,errHandle(adminNotificationList))
+router.get(routes.v1.adminNotificationManagement.get,errHandle(getAdminNotification))
+router.put(routes.v1.adminNotificationManagement.update,errHandle(updateAdminNotification))
+router.delete(routes.v1.adminNotificationManagement.delete,errHandle(deleteAdminNotification))
+
 
 // ap notification 
 router.get(routes.v1.apNotificationManagement.list,[verifyToken(["ADMIN","AP"]),apNotificationListValidation],errHandle(apNotificationList))

@@ -40,6 +40,13 @@ const routes = {
       list: "/v1/ap-notification-management/list",
       update: "/v1/ap-notification-management/update",
     },
+    adminNotificationManagement: {
+      list: "/v1/admin-notification-management/list",
+      create: "/v1/admin-notification-management/create",
+      get: "/v1/admin-notification-management/get",
+      update: "/v1/admin-notification-management/update",
+      delete: "/v1/admin-notification-management/delete",
+    },
     mail: {
       send:"/v1/Mail/sendMail"
     },
