@@ -9,7 +9,6 @@ const adminNotificationTemplate = require('../utils/adminNotificationTemplate')
 
 
 const createAdminNotificationService = async (params) => {
-    params.type ="LEAD_CREATED_NOTIFICATION";
     const [title, description] = await adminNotificationTemplate[params.type](params)
     params.title = title
     params.description = description
