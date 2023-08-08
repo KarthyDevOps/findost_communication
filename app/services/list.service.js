@@ -262,6 +262,7 @@ const getMyScheduleList = async (params) => {
       filter.isActive = params.isActive;
     }
     if(params.filterDate){
+      console.log('filterDate', params?.filterDate)
       filter.startTime = { $gte: moment(params.filterDate).startOf('day') ,$lte:  moment(params.filterDate).endOf('day') }
     }
     if (params?.search) {

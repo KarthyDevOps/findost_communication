@@ -22,7 +22,8 @@ const adminNotificationSchema = new mongoose.Schema(
         },
         isDeleted: {
             type: String,
-            trim: true
+            trim: true,
+            default:false
         },
         isActive: {
             type: String,

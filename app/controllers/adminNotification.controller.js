@@ -83,7 +83,7 @@ const { adminScheduleListService } = require("../services/adminSchedule");
     params.limit = parseInt(params?.limit);
     params.page = parseInt(params?.page);
     console.log("req", params);
-    const result = await adminScheduleListService(params);
+    const result = await AdminNotificationListService(params);
     if (!result.status) {
       return sendErrorResponse(
         req,
