@@ -35,6 +35,10 @@ const scheduleSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    date: {
+      type: String,
+      trim: true,
+    },
     endTime: {
       type: Date,
       required: false,
@@ -61,6 +65,7 @@ const scheduleSchema = new mongoose.Schema(
       trim: true,
       enum: [MAIL_TYPE.GOOGLE,MAIL_TYPE.MICROSOFT],
     },
+  
     isActive: {
       type: Boolean,
       default: true,

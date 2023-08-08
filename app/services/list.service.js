@@ -263,7 +263,7 @@ const getMyScheduleList = async (params) => {
     }
     if(params.filterDate){
       console.log('filterDate', params?.filterDate)
-      filter.startTime = { $gte: moment(params.filterDate).startOf('day') ,$lte:  moment(params.filterDate).endOf('day') }
+      filter.date = params.filterDate //{ $gte: moment(params.filterDate).startOf('day') ,$lte:  moment(params.filterDate).endOf('day') }
     }
     if (params?.search) {
       filter.$or = [
@@ -285,7 +285,8 @@ const getMyScheduleList = async (params) => {
       filter.isActive = params.isActive;
     }
     if(params.filterDate){
-      filter.startTime = { $gte: moment(params.filterDate).startOf('day') ,$lte:  moment(params.filterDate).endOf('day') }
+      console.log('filterDate', params?.filterDate)
+      filter.date = params.filterDate //{ $gte: moment(params.filterDate).startOf('day') ,$lte:  moment(params.filterDate).endOf('day') }
     }
     if (params?.search) {
       filter.$or = [
