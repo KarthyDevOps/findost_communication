@@ -1,25 +1,26 @@
-const {schedule}  = require("../models/schedule");
+const { schedule } = require("../models/schedule");
 const { messages } = require("../response/customMesages");
 const { statusCodes } = require("../response/httpStatusCodes");
 const { statusMessage } = require("../response/httpStatusMessages");
-const {pageMetaService, getAuthenticatedClient} = require("../helpers/index")
-const {google} = require('googleapis')
-const {oauth2client} = require('../helpers/index')
-const moment = require('moment')
+const { pageMetaService, getAuthenticatedClient } = require("../helpers/index");
+const { google } = require("googleapis");
+const { oauth2client } = require("../helpers/index");
+const moment = require("moment");
 const { adminSchedule } = require("../models/adminSchedule");
 const { getMyScheduleList } = require("./list.service");
+const { default: mongoose } = require("mongoose");
 
-const calendar =  google.calendar({
-  version:"v3",
-  auth:process.env.API_KEY
-})
+const calendar = google.calendar({
+  version: "v3",
+  auth: process.env.API_KEY,
+});
 
 const addScheduleService = async (req, params) => {
-  try {  
-    console.log('params-->', params)
-    params.date = moment(params?.startTime).format("YYYY-MM-DD")
-    let result = await schedule.create(params)
-    console.log('result', result)
+  try {
+    console.log("params-->", params);
+    params.date = moment(params?.startTime).format("YYYY-MM-DD");
+    let result = await schedule.create(params);
+    console.log("result", result);
     return {
       status: true,
       statusCode: statusCodes?.HTTP_OK,
@@ -27,26 +28,25 @@ const addScheduleService = async (req, params) => {
       data: result,
     };
   } catch (error) {
-    console.log('error -->', error)
-   
+    console.log("error -->", error);
   }
-
 };
 
 const addMyScheduleService = async (req, params) => {
   try {
-
     if (params?.type == "FINDOC") {
-
       let getAdminSchedule = await adminSchedule.findOne({
-        _id: params?.id
-      })
+        _id: params?.id,
+      });
 
       let date = getAdminSchedule?.date;
       let startDate = getAdminSchedule?.startTime;
       let endDate = getAdminSchedule?.endTime;
-      let startTime = moment(date + ' ' + startDate, 'YYYY-MM-DD HH:mm').format();
-      let endTime = moment(date + ' ' + endDate, 'YYYY-MM-DD HH:mm').format();
+      let startTime = moment(
+        date + " " + startDate,
+        "YYYY-MM-DD HH:mm"
+      ).format();
+      let endTime = moment(date + " " + endDate, "YYYY-MM-DD HH:mm").format();
       if (getAdminSchedule) {
         let storeValue = {
           summary: getAdminSchedule?.summary,
@@ -59,18 +59,17 @@ const addMyScheduleService = async (req, params) => {
           imageUrl: getAdminSchedule?.imageUrlS3,
           createdBy: params?.createdBy,
           updatedBy: params?.createdBy,
-          lastUpdatedBy: params?.lastUpdatedBy
-        }
-        let result = await schedule.create(storeValue)
-        console.log('result', result)
+          lastUpdatedBy: params?.lastUpdatedBy,
+        };
+        let result = await schedule.create(storeValue);
+        console.log("result", result);
         return {
           status: true,
           statusCode: statusCodes?.HTTP_OK,
           message: messages?.scheduleCreated,
           data: result,
         };
-        }
-      else {
+      } else {
         return {
           status: false,
           statusCode: statusCodes?.HTTP_BAD_REQUEST,
@@ -78,16 +77,11 @@ const addMyScheduleService = async (req, params) => {
           data: [],
         };
       }
-      }
-     
-    
+    }
   } catch (error) {
-    console.log('error -->', error)
-
+    console.log("error -->", error);
   }
 };
-
-
 
 const getScheduleByIdService = async (params) => {
   console.log("params1");
@@ -102,7 +96,7 @@ const getScheduleByIdService = async (params) => {
       },
     ],
   });
-  console.log('result', result)
+  console.log("result", result);
   if (result) {
     return {
       status: true,
@@ -121,7 +115,6 @@ const getScheduleByIdService = async (params) => {
 };
 
 const updateScheduleService = async (params) => {
-
   const findData = await schedule.findOne({
     $or: [
       {
@@ -133,22 +126,21 @@ const updateScheduleService = async (params) => {
     ],
   });
 
-  console.log('findData', findData)
+  console.log("findData", findData);
 
   let storeValue = {
-    summary:findData?.summary,
-    description:findData?.description,
-    startTime:findData?.startTime,
-    endTime:findDatay?.endTime,
-    agenda:findData?.agenda,
-   eventId:createEvent?.data?.id,
-    createdBy : params?.createdBy,
-    updatedBy : params?.createdBy,
-    lastUpdatedBy :params?.lastUpdatedBy,
-    mailType:req?.body?.mailType
-  }
+    summary: findData?.summary,
+    description: findData?.description,
+    startTime: findData?.startTime,
+    endTime: findDatay?.endTime,
+    agenda: findData?.agenda,
+    eventId: createEvent?.data?.id,
+    createdBy: params?.createdBy,
+    updatedBy: params?.createdBy,
+    lastUpdatedBy: params?.lastUpdatedBy,
+    mailType: req?.body?.mailType,
+  };
 
- 
   const id = params?.id;
 
   var query = { $set: params };
@@ -171,8 +163,7 @@ const updateScheduleService = async (params) => {
     data: [],
   };
 };
-const syncCalandarService = async (req,params) => {
-
+const syncCalandarService = async (req, params) => {
   if (params.mailType == "GOOGLE" && !params.email) {
     return {
       status: false,
@@ -190,77 +181,142 @@ const syncCalandarService = async (req,params) => {
     };
   }
 
-  const findData = await schedule.findOne({
+  const findDatas = await schedule.findOne({
     $or: [
       {
         scheduleId: params.scheduleId,
       },
       {
-        _id: params.id,
+        _id: { $in: params.id.map(_id =>new mongoose.Types.ObjectId(_id))  },
       },
     ],
   });
-  console.log('findData-->', findData)
-
-  
-  let startdate = moment(findData?.startTime);
-
-  let endDate = moment(startdate).add(10, 'minutes');  
-
-  if (params?.mailType == "GOOGLE") {
-
-    let createEvent = await calendar.events.insert({
-      calendarId: "primary",
-      auth: oauth2client,
-      requestBody: {
-        summary: findData?.summary,
-        description: findData?.description,
-        //  location: "Ramnad",
-        start: {
-          dateTime: new Date(startdate), //"2023-07-31T06:54:47.277+00:00",
-          TimeZone: "Asia/kolkata",
+  console.log("findDatas-->", findDatas);
+  for (let findData of findDatas) {
+    let startdate = moment(findData?.startTime);
+    let endDate = moment(startdate).add(10, "minutes");
+    if (params?.mailType == "GOOGLE") {
+      let createEvent = await calendar.events.insert({
+        calendarId: "primary",
+        auth: oauth2client,
+        requestBody: {
+          summary: findData?.summary,
+          description: findData?.description,
+          //  location: "Ramnad",
+          start: {
+            dateTime: new Date(startdate), //"2023-07-31T06:54:47.277+00:00",
+            TimeZone: "Asia/kolkata",
+          },
+          end: {
+            dateTime: new Date(endDate), // "2023-07-31T06:54:47.277+00:00",
+            TimeZone: "Asia/kolkata",
+          },
+          attendees: [{ email: params?.email }],
         },
-        end: {
-          dateTime: new Date(endDate), // "2023-07-31T06:54:47.277+00:00",
-          TimeZone: "Asia/kolkata",
-        },
-        attendees: [
-          { email: params?.email }
-        ],
-      }
-    })
-    if (createEvent.data.status == "confirmed") {
-      let storeValue = {
-        summary: findData?.summary,
-        description: findData?.description,
-        startTime: findData?.startTime,
-        endTime: endDate,
-        agenda: findData?.agenda,
-        eventId: createEvent?.data?.id,
-        createdBy: params?.createdBy,
-        updatedBy: params?.createdBy,
-        lastUpdatedBy: params?.lastUpdatedBy,
-        mailType: params?.mailType
-      }
-      const result = await schedule.updateOne({ _id: findData?._id }, storeValue);
-      console.log("result -->", result);
-      if (!result.modifiedCount) {
+      });
+      if (createEvent.data.status == "confirmed") {
+        let storeValue = {
+          summary: findData?.summary,
+          description: findData?.description,
+          startTime: findData?.startTime,
+          endTime: endDate,
+          agenda: findData?.agenda,
+          eventId: createEvent?.data?.id,
+          createdBy: params?.createdBy,
+          updatedBy: params?.createdBy,
+          lastUpdatedBy: params?.lastUpdatedBy,
+          mailType: params?.mailType,
+        };
+        const result = await schedule.updateOne(
+          { _id: findData?._id },
+          storeValue
+        );
+        console.log("result -->", result);
+        if (!result.modifiedCount) {
+          return {
+            status: false,
+            statusCode: statusCodes?.HTTP_BAD_REQUEST,
+            message: messages?.userNotExist,
+            data: [],
+          };
+        }
+        return {
+          status: true,
+          statusCode: statusCodes?.HTTP_OK,
+          message: messages?.updated,
+          data: [],
+        };
+      } else {
         return {
           status: false,
-          statusCode: statusCodes?.HTTP_BAD_REQUEST,
-          message: messages?.userNotExist,
+          statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
+          message: messages?.notInserted,
           data: [],
         };
       }
-      return {
-        status: true,
-        statusCode: statusCodes?.HTTP_OK,
-        message: messages?.updated,
-        data: [],
-      };
-
     }
-    else {
+    else if (params?.mailType == "MICROSOFT") {
+      const event = {
+        subject: findData?.summary,
+        body: {
+          contentType: "text",
+          content: findData?.description,
+        },
+        start: {
+          dateTime: new Date(startdate),
+          timeZone: "India Standard Time",
+        },
+        end: {
+          dateTime: new Date(endDate),
+          timeZone: "India Standard Time",
+        },
+      };
+  
+      let token = req?.body?.accesstoken;
+  
+      console.log("token-->", token);
+  
+      let client = getAuthenticatedClient(token);
+  
+      let microsoftCreateEvent = await client.api("/me/events").post(event);
+  
+      console.log("microsoftCreateEvent-->", microsoftCreateEvent);
+  
+      if (microsoftCreateEvent.createdDateTime) {
+        let storeValue = {
+          summary: findData?.summary,
+          description: findData?.description,
+          startTime: findData?.startTime,
+          endTime: endDate,
+          agenda: findData?.agenda,
+          eventId: microsoftCreateEvent?.iCalUId,
+          createdBy: params?.createdBy,
+          updatedBy: params?.createdBy,
+          lastUpdatedBy: params?.lastUpdatedBy,
+          mailType: params?.mailType,
+        };
+        const result = await schedule.updateOne(
+          { _id: findData?._id },
+          storeValue
+        );
+        console.log("result -->", result);
+        if (!result.modifiedCount) {
+          return {
+            status: false,
+            statusCode: statusCodes?.HTTP_BAD_REQUEST,
+            message: messages?.userNotExist,
+            data: [],
+          };
+        }
+        return {
+          status: true,
+          statusCode: statusCodes?.HTTP_OK,
+          message: messages?.updated,
+          data: [],
+        };
+      }
+      console.log("datas--->", data);
+    } else {
       return {
         status: false,
         statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
@@ -269,76 +325,11 @@ const syncCalandarService = async (req,params) => {
       };
     }
   }
-  if (params?.mailType == "MICROSOFT") {
 
-    const event = { 
-      subject: findData?.summary, 
-      body: {
-        contentType: 'text',
-        content:findData?.description
-      },   
-      start: { 
-        dateTime: new Date(startdate), 
-        timeZone: "India Standard Time", 
-      }, 
-      end: { 
-        dateTime: new Date(endDate), 
-        timeZone: "India Standard Time", 
-      }
-    }; 
+ 
 
-    let token = req?.body?.accesstoken;
-
-    console.log("token-->",token)
-
-    let client = getAuthenticatedClient(token)
-
-    let microsoftCreateEvent = await client.api('/me/events').post(event)
-
-    console.log('microsoftCreateEvent-->', microsoftCreateEvent)
-
-    if (microsoftCreateEvent.createdDateTime) {
-      let storeValue = {
-        summary: findData?.summary,
-        description: findData?.description,
-        startTime: findData?.startTime,
-        endTime: endDate,
-        agenda: findData?.agenda,
-        eventId: microsoftCreateEvent?.iCalUId,
-        createdBy: params?.createdBy,
-        updatedBy: params?.createdBy,
-        lastUpdatedBy: params?.lastUpdatedBy,
-        mailType: params?.mailType
-      }
-      const result = await schedule.updateOne({ _id: findData?._id }, storeValue);
-      console.log("result -->", result);
-      if (!result.modifiedCount) {
-        return {
-          status: false,
-          statusCode: statusCodes?.HTTP_BAD_REQUEST,
-          message: messages?.userNotExist,
-          data: [],
-        };
-      }
-      return {
-        status: true,
-        statusCode: statusCodes?.HTTP_OK,
-        message: messages?.updated,
-        data: [],
-      };
-
-    }
-    console.log('datas--->', data)
-}
-else {
-  return {
-    status: false,
-    statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
-    message: messages?.notInserted,
-    data: [],
-  };
-}
-}
+  
+};
 const deleteScheduleService = async (params) => {
   const id = params?.id;
   var query = {
@@ -367,17 +358,17 @@ const deleteScheduleService = async (params) => {
   };
 };
 
-
 const ScheduleListService = async (params) => {
   params.all = true;
   const allList = await getMyScheduleList(params);
-  params.all = params.returnAll ==true ||  params.isExport ==true ? true : false;
+  params.all =
+    params.returnAll == true || params.isExport == true ? true : false;
   const result = await getMyScheduleList(params);
   const pageMeta = await pageMetaService(params, allList?.data?.length || 0);
   return {
-      status: true,
-      statusCode: statusCodes?.HTTP_OK,
-      data: { list: result?.data, pageMeta },
+    status: true,
+    statusCode: statusCodes?.HTTP_OK,
+    data: { list: result?.data, pageMeta },
   };
 };
 
@@ -388,6 +379,5 @@ module.exports = {
   deleteScheduleService,
   ScheduleListService,
   syncCalandarService,
-  addMyScheduleService
-
+  addMyScheduleService,
 };
