@@ -181,7 +181,7 @@ const syncCalandarService = async (req, params) => {
     };
   }
 
-  const findDatas = await schedule.findOne({
+  let findDatas = await schedule.find({
     $or: [
       {
         scheduleId: params.scheduleId,
