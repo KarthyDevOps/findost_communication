@@ -10,7 +10,7 @@ const {
 
 const apUpdateNotification = async (req, res) => {
     const params = req.body;
-    params.id = req?.query?.id;
+    params.id = req?.query?.id || params.id;
     params.updatedBy = req?.user?._id?.toString();
     params.lastUpdatedBy = req?.user?.userType;
     params.authorizedPersonId = req?.user?._id;
