@@ -18,7 +18,7 @@ const moment = require("moment");
 
 const addSchedule = async (req, res) => {
   const params = req.body;
-   params.apId = req?.user?._id;
+   params.apId = req?.user?.apId;
   params.createdBy = req?.user?._id?.toString();
   params.updatedBy = req?.user?._id?.toString();
     params.lastUpdatedBy = req?.user?.userType;
@@ -43,7 +43,7 @@ const addSchedule = async (req, res) => {
 
 const addMySchedule = async (req, res) => {
   const params = req.body;
-   params.apId = req?.user?._id;
+   params.apId = req?.user?.apId;
   params.createdBy = req?.user?._id?.toString();
   params.updatedBy = req?.user?._id?.toString();
   params.lastUpdatedBy = req?.user?.userType;

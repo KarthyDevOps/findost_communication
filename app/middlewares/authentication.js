@@ -28,6 +28,8 @@ const verifyToken = (type = ["ADMIN"]) =>
             // decode = jwt.verify(token, process.env.JWT_authorizedPerson_SECRET);
             // userData = await InternalServices.getAPById({ _id: decode?._id });
             userData = await InternalServices.getBOUSERSById({token:token});
+            userData = JSON.parse(JSON.stringify(userData))
+            userData.data.apId = userData?.data?.BOUserId
             console.log('userData--->', userData)
             userType = "AP";
           }

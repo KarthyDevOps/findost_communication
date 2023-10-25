@@ -24,7 +24,7 @@ const getSequenceId = async (data) => {
 };
 
 const getBOUSERSById = async (data) => {
-  let apiConfig = JSON.parse(JSON.stringify(InternalAPIs.getAPById));
+  let apiConfig = JSON.parse(JSON.stringify(InternalAPIs.getUserById));
   apiConfig.url = process.env.USER_URL + process.env.GET_BO_USERS_BY_ID + data;
   apiConfig.data = data;
   console.log("apiConfig", apiConfig);
