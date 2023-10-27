@@ -305,7 +305,18 @@ const getMyScheduleList = async (params) => {
       .limit(params.limit)
       .sort({ createdAt: -1 });
   }
+  data = JSON.parse(JSON.stringify(data))
+
   if (data && data.length) {
+    for (let item of data) {
+      if (item.startTime) {
+        const dateStr = item.startTime;
+        const dateTime = moment(dateStr);
+        let amTime = dateTime.format("hh:mm A");
+        item.meetStartTime = amTime;
+        item.meetEndTime = dateTime.add(20, "minutes").format("hh:mm A");
+      }
+    }
     return { status: true, data: data };
   } else {
     return { status: false, data: [] };

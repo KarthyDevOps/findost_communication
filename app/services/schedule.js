@@ -194,7 +194,7 @@ const syncCalandarService = async (req, params) => {
   console.log("findDatas-->", findDatas);
   for (let findData of findDatas) {
     let startdate = moment(findData?.startTime);
-    let endDate = moment(startdate).add(10, "minutes");
+    let endDate = moment(startdate).add(20, "minutes");
     if (params?.mailType == "GOOGLE") {
       let createEvent = await calendar.events.insert({
         calendarId: "primary",

@@ -165,8 +165,8 @@ const scheduleList = async (req, res) => {
         { header: "summary", key: "summary", width: 15 },
         { header: "description", key: "description", width: 25 },
         { header: "date", key: "date", width: 25 },
-        { header: "startTime", key: "startTime", width: 25 },
-        { header: "endTime", key: "endTime", width: 25 },
+        { header: "startTime", key: "meetStartTime", width: 25 },
+        { header: "endTime", key: "meetEndTime", width: 25 },
         { header: "agenda", key: "agenda", width: 25 },
         { header: "speakerName", key: "speakerName", width: 25 },
         { header: "place", key: "place", width: 25 }
