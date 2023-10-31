@@ -33,7 +33,13 @@ const {
   apNotificationListValidation,
 } = require("../validator/validator");
 
-const { createAdminNotification,updateAdminNotification,deleteAdminNotification,getAdminNotification,adminNotificationList} = require("../controllers/adminNotification.controller")
+const {
+  createAdminNotification,
+  updateAdminNotification,
+  deleteAdminNotification,
+  getAdminNotification,
+  adminNotificationList,
+} = require("../controllers/adminNotification.controller");
 const {
   notificationTemplateList,
   createNotificationTemplate,
@@ -68,7 +74,10 @@ const {
 
 const { errHandle } = require("../helpers/index");
 const { sendMailWithAttachment } = require("../controllers/mail.controller");
-const { apNotificationList, apUpdateNotification } = require("../controllers/apNotificationList.controller");
+const {
+  apNotificationList,
+  apUpdateNotification,
+} = require("../controllers/apNotificationList.controller");
 
 const router = Router();
 
@@ -164,11 +173,11 @@ router.post(
 );
 router.get(
   routes.v1.adminSchedule.list,
-  [
-    verifyToken(["ADMIN", "AP"]),
-    verifyAdminRole("scheduleManagement", "VIEW"),
-    scheduleListValidation,
-  ],
+  // [
+  //   verifyToken(["ADMIN", "AP"]),
+  //   verifyAdminRole("scheduleManagement", "VIEW"),
+  //   scheduleListValidation,
+  // ],
   errHandle(adminScheduleList)
 );
 router.put(
@@ -250,16 +259,38 @@ router.delete(
 );
 
 //admin Notification
-router.post(routes.v1.adminNotificationManagement.create,errHandle(createAdminNotification))
-router.get(routes.v1.adminNotificationManagement.list,errHandle(adminNotificationList))
-router.get(routes.v1.adminNotificationManagement.get,errHandle(getAdminNotification))
-router.put(routes.v1.adminNotificationManagement.update,errHandle(updateAdminNotification))
-router.delete(routes.v1.adminNotificationManagement.delete,errHandle(deleteAdminNotification))
+router.post(
+  routes.v1.adminNotificationManagement.create,
+  errHandle(createAdminNotification)
+);
+router.get(
+  routes.v1.adminNotificationManagement.list,
+  errHandle(adminNotificationList)
+);
+router.get(
+  routes.v1.adminNotificationManagement.get,
+  errHandle(getAdminNotification)
+);
+router.put(
+  routes.v1.adminNotificationManagement.update,
+  errHandle(updateAdminNotification)
+);
+router.delete(
+  routes.v1.adminNotificationManagement.delete,
+  errHandle(deleteAdminNotification)
+);
 
-
-// ap notification 
-router.get(routes.v1.apNotificationManagement.list,[verifyToken(["ADMIN","AP"]),apNotificationListValidation],errHandle(apNotificationList))
-router.put(routes.v1.apNotificationManagement.update,[verifyToken(["AP"])],errHandle(apUpdateNotification))
+// ap notification
+router.get(
+  routes.v1.apNotificationManagement.list,
+  [verifyToken(["ADMIN", "AP"]), apNotificationListValidation],
+  errHandle(apNotificationList)
+);
+router.put(
+  routes.v1.apNotificationManagement.update,
+  [verifyToken(["AP"])],
+  errHandle(apUpdateNotification)
+);
 
 ///send mail
 

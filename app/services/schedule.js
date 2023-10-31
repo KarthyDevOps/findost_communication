@@ -40,6 +40,7 @@ const addMyScheduleService = async (req, params) => {
       });
 
       let date = getAdminSchedule?.date;
+      console.log('date-->', date)
       let startDate = getAdminSchedule?.startTime;
       let endDate = getAdminSchedule?.endTime;
       let startTime = moment(
@@ -53,6 +54,7 @@ const addMyScheduleService = async (req, params) => {
           description: getAdminSchedule?.description,
           startTime: startTime,
           endTime: endTime,
+          date:date,
           agenda: getAdminSchedule?.agenda,
           place: getAdminSchedule?.agenda,
           speakerName: getAdminSchedule?.speakerName,
