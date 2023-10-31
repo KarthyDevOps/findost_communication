@@ -43,10 +43,10 @@ const addMyScheduleService = async (req, params) => {
       console.log('date-->', date)
       let startDate = getAdminSchedule?.startTime;
       let endDate = getAdminSchedule?.endTime;
-      let startTime = moment(
-        date + " " + startDate,
-        "YYYY-MM-DD HH:mm"
-      ).format();
+      console.log('startDate -->', startDate)
+      let startTime = moment(date + " " + startDate,"YYYY-MM-DD HH:mm:ss").format();
+      console.log('startTime -->', startTime)
+
       let endTime = moment(date + " " + endDate, "YYYY-MM-DD HH:mm").format();
       if (getAdminSchedule) {
         let storeValue = {
@@ -88,16 +88,20 @@ const addMyScheduleService = async (req, params) => {
 const getScheduleByIdService = async (params) => {
   console.log("params1");
   //get ScheduleListService details by ScheduleListService id
-  const result = await schedule.findOne({
+  let result = await schedule.findOne({
     $or: [
       {
         scheduleId: params.scheduleId,
       },
       {
-        id: params.id,
+        _id: params.id,
       },
     ],
   });
+  result = JSON.parse(JSON.stringify(result))
+
+  result.startTime = moment.tz(result.startTime, "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+  result.endTime = moment.tz(result.endTime, "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
   console.log("result", result);
   if (result) {
     return {

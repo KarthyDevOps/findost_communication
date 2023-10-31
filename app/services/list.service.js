@@ -326,6 +326,9 @@ const getMyScheduleList = async (params) => {
         let amTime = dateTime.format("hh:mm A");
         item.meetStartTime = amTime;
         item.meetEndTime = dateTime.add(20, "minutes").format("hh:mm A");
+        item.startTime = moment.tz(item.startTime, "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+        item.endTime = moment.tz(item.endTime, "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+        console.log('item.startTime', item.startTime)
       }
     }
     return { status: true, data: data };
