@@ -25,9 +25,13 @@ const verifyToken = (type = ["ADMIN"]) =>
           userType = "ADMIN";
         } catch (error) {
           if (type.includes("AP")) {
-            // decode = jwt.verify(token, process.env.JWT_authorizedPerson_SECRET);
-            // userData = await InternalServices.getAPById({ _id: decode?._id });
-            userData = await InternalServices.getBOUSERSById({token:token});
+            let id;
+            decode = jwt.verify(token, process.env.JWT_authorizedPerson_SECRET);
+            if (decode) {
+              id = decode?.APId || decode?._id;
+            }
+
+            userData = await InternalServices.getBOUSERSById({token:id});
             userData = JSON.parse(JSON.stringify(userData))
             userData.data.apId = userData?.data?.BOUserId
             console.log('userData--->', userData)
