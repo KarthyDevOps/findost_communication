@@ -63,6 +63,8 @@ connectToMongo();
 const port = process.env.PORT;
 app.use("/communication", routerService);
 
+
+
 app.listen(port, () => {
   console.log(
     `Microservice ${process.env.SERVICE_NAME} is running on port ${port}.`
