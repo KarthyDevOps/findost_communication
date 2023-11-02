@@ -44,10 +44,10 @@ const addMyScheduleService = async (req, params) => {
       let startDate = getAdminSchedule?.startTime;
       let endDate = getAdminSchedule?.endTime;
       console.log('startDate -->', startDate)
-      let startTime = moment(date + " " + startDate,"YYYY-MM-DD HH:mm:ss").format();
+      let startTime = moment(date + " " + startDate,"YYYY-MM-DD hh:mm A").format();
       console.log('startTime -->', startTime)
 
-      let endTime = moment(date + " " + endDate, "YYYY-MM-DD HH:mm").format();
+      let endTime = moment(date + " " + endDate, "YYYY-MM-DD hh:mm A").format();
       if (getAdminSchedule) {
         let storeValue = {
           summary: getAdminSchedule?.summary,
