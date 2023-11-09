@@ -18,7 +18,10 @@ const calendar = google.calendar({
 const addScheduleService = async (req, params) => {
   try {
     console.log("params-->", params);
-    params.startTime = new date(params?.startTime)
+    params.startTime = new Date(params?.startTime)
+
+    
+
     params.date = moment(params?.startTime).format("YYYY-MM-DD");
     let result = await schedule.create(params);
     console.log("result", result);
