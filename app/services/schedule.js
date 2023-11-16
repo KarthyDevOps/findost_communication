@@ -272,14 +272,15 @@ const syncCalandarService = async (req, params) => {
           content: findData?.description,
         },
         start: {
-          dateTime: new Date(startdate),
+          dateTime: new Date(startdate.utcOffset(0,true)),
           timeZone: "India Standard Time",
         },
         end: {
-          dateTime: new Date(endDate),
+          dateTime: new Date(endDate.utcOffset(0,true)),
           timeZone: "India Standard Time",
         },
       };
+      console.log("data",event)
   
       let token = req?.body?.accesstoken;
   
