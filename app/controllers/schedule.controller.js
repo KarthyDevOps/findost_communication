@@ -69,6 +69,8 @@ const addMySchedule = async (req, res) => {
 
 const syncCalendarSchedule = async (req, res) => {
   const params = req.body;
+
+  console.log("params -->" , params)
   params.id = req?.body?.id;
   params.createdBy = req?.user?._id?.toString();
   params.updatedBy = req?.user?._id?.toString();
