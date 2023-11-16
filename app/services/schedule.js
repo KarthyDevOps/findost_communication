@@ -18,7 +18,9 @@ const calendar = google.calendar({
 const addScheduleService = async (req, params) => {
   try {
     console.log("params-->", params);
-    params.date = moment(params?.startTime).format("YYYY-MM-DD");
+   // params.startTime = moment.tz(params.startTime, "Asia/Kolkata").format("YYYY-MM-DD HH:mm:ss");
+   params.startTime = new Date(params.startTime) 
+   params.date = moment(params?.startTime).format("YYYY-MM-DD");
     let result = await schedule.create(params);
     console.log("result", result);
     return {
@@ -199,8 +201,10 @@ const syncCalandarService = async (req, params) => {
   });
   console.log("findDatas-->", findDatas);
   for (let findData of findDatas) {
-    let startdate = moment(findData?.startTime);
+    let startdate = moment(findData?.startTime).subtract(5, 'hours').subtract(30, 'minutes');
     let endDate = moment(startdate).add(20, "minutes");
+
+    console.log("startTime",startdate,"endTme",endDate)
     if (params?.mailType == "GOOGLE") {
       let createEvent = await calendar.events.insert({
         calendarId: "primary",
