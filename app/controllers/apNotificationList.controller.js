@@ -37,7 +37,7 @@ const apUpdateNotification = async (req, res) => {
 const apNotificationList = async (req, res) => {
 
     const params = req?.query;
-    params.authorizedPersonId = req?.user?._id;
+    params.authorizedPersonId = req.user.apId || req?.user?._id;
     if (!params.limit) params.limit = 10
     if (!params.page) params.page = 1
     const result = await apNotificationListService(params);
