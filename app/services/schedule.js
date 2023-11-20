@@ -170,6 +170,173 @@ const updateScheduleService = async (params) => {
     data: [],
   };
 };
+// const syncCalandarService = async (req, params) => {
+//   if (params.mailType == "GOOGLE" && !params.email) {
+//     return {
+//       status: false,
+//       statusCode: statusCodes?.HTTP_BAD_REQUEST,
+//       message: messages?.mailRequired,
+//       data: [],
+//     };
+//   }
+//   if (params.mailType == "MICROSOFT" && !req.body.accesstoken) {
+//     return {
+//       status: false,
+//       statusCode: statusCodes?.HTTP_BAD_REQUEST,
+//       message: messages?.accessTokenRequired,
+//       data: [],
+//     };
+//   }
+
+//   let findDatas = await schedule.find({
+//     $or: [
+//       {
+//         scheduleId: params.scheduleId,
+//       },
+//       {
+//         _id: { $in: params.id.map(_id =>new mongoose.Types.ObjectId(_id))  },
+//       },
+//     ],
+//   });
+//   console.log("findDatas-->", findDatas);
+//   for (let findData of findDatas) {
+//     let startdate = moment(findData?.startTime).subtract(5, 'hours').subtract(30, 'minutes');
+//     let endDate = moment(startdate).add(20, "minutes");
+
+//     console.log("startTime",startdate,"endTme",endDate)
+//     if (params?.mailType == "GOOGLE") {
+//       let createEvent = await calendar.events.insert({
+//         calendarId: "primary",
+//         auth: oauth2client,
+//         requestBody: {
+//           summary: findData?.summary,
+//           description: findData?.description,
+//           //  location: "Ramnad",
+//           start: {
+//             dateTime: new Date(startdate), //"2023-07-31T06:54:47.277+00:00",
+//             TimeZone: "Asia/kolkata",
+//           },
+//           end: {
+//             dateTime: new Date(endDate), // "2023-07-31T06:54:47.277+00:00",
+//             TimeZone: "Asia/kolkata",
+//           },
+//           attendees: [{ email: params?.email }],
+//         },
+//       });
+//       if (createEvent.data.status == "confirmed") {
+//         let storeValue = {
+//           summary: findData?.summary,
+//           description: findData?.description,
+//           startTime: findData?.startTime,
+//           endTime: endDate,
+//           agenda: findData?.agenda,
+//           eventId: createEvent?.data?.id,
+//           createdBy: params?.createdBy,
+//           updatedBy: params?.createdBy,
+//           lastUpdatedBy: params?.lastUpdatedBy,
+//           mailType: params?.mailType,
+//         };
+//         const result = await schedule.updateOne(
+//           { _id: findData?._id },
+//           storeValue
+//         );
+//         console.log("result -->", result);
+//         if (!result.modifiedCount) {
+//           return {
+//             status: false,
+//             statusCode: statusCodes?.HTTP_BAD_REQUEST,
+//             message: messages?.userNotExist,
+//             data: [],
+//           };
+//         }
+//         return {
+//           status: true,
+//           statusCode: statusCodes?.HTTP_OK,
+//           message: messages?.updated,
+//           data: [],
+//         };
+//       } else {
+//         return {
+//           status: false,
+//           statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
+//           message: messages?.notInserted,
+//           data: [],
+//         };
+//       }
+//     }
+//     else if (params?.mailType == "MICROSOFT") {
+//       const event = {
+//         subject: findData?.summary,
+//         body: {
+//           contentType: "text",
+//           content: findData?.description,
+//         },
+//         start: {
+//           dateTime: new Date(startdate.utcOffset(0,true)),
+//           timeZone: "India Standard Time",
+//         },
+//         end: {
+//           dateTime: new Date(endDate.utcOffset(0,true)),
+//           timeZone: "India Standard Time",
+//         },
+//       };
+//       console.log("data",event)
+  
+//       let token = req?.body?.accesstoken;
+  
+//       console.log("token-->", token);
+  
+//       let client = getAuthenticatedClient(token);
+  
+//       let microsoftCreateEvent = await client.api("/me/events").post(event);
+  
+//       console.log("microsoftCreateEvent-->", microsoftCreateEvent);
+  
+//       if (microsoftCreateEvent.createdDateTime) {
+//         let storeValue = {
+//           summary: findData?.summary,
+//           description: findData?.description,
+//           startTime: findData?.startTime,
+//           endTime: endDate,
+//           agenda: findData?.agenda,
+//           eventId: microsoftCreateEvent?.iCalUId,
+//           createdBy: params?.createdBy,
+//           updatedBy: params?.createdBy,
+//           lastUpdatedBy: params?.lastUpdatedBy,
+//           mailType: params?.mailType,
+//         };
+//         const result = await schedule.updateOne(
+//           { _id: findData?._id },
+//           storeValue
+//         );
+//         console.log("result -->", result);
+//         if (!result.modifiedCount) {
+//           return {
+//             status: false,
+//             statusCode: statusCodes?.HTTP_BAD_REQUEST,
+//             message: messages?.userNotExist,
+//             data: [],
+//           };
+//         }
+//         return {
+//           status: true,
+//           statusCode: statusCodes?.HTTP_OK,
+//           message: messages?.updated,
+//           data: [],
+//         };
+//       }
+//       console.log("datas--->", data);
+//     } else {
+//       return {
+//         status: false,
+//         statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
+//         message: messages?.notInserted,
+//         data: [],
+//       };
+//     }
+//   }
+// };
+
 const syncCalandarService = async (req, params) => {
   if (params.mailType == "GOOGLE" && !params.email) {
     return {
@@ -179,153 +346,57 @@ const syncCalandarService = async (req, params) => {
       data: [],
     };
   }
-  if (params.mailType == "MICROSOFT" && !req.body.accesstoken) {
-    return {
-      status: false,
-      statusCode: statusCodes?.HTTP_BAD_REQUEST,
-      message: messages?.accessTokenRequired,
-      data: [],
-    };
-  }
-
   let findDatas = await schedule.find({
     $or: [
       {
         scheduleId: params.scheduleId,
       },
       {
-        _id: { $in: params.id.map(_id =>new mongoose.Types.ObjectId(_id))  },
+        _id: { $in: params.id.map((_id) => new mongoose.Types.ObjectId(_id)) },
       },
     ],
   });
-  console.log("findDatas-->", findDatas);
+ 
   for (let findData of findDatas) {
-    let startdate = moment(findData?.startTime).subtract(5, 'hours').subtract(30, 'minutes');
+    console.log("findDatas-->", findDatas);
+    let startdate = moment(findData?.startTime).subtract(5, "hours").subtract(30, "minutes");
     let endDate = moment(startdate).add(20, "minutes");
 
-    console.log("startTime",startdate,"endTme",endDate)
-    if (params?.mailType == "GOOGLE") {
-      let createEvent = await calendar.events.insert({
-        calendarId: "primary",
-        auth: oauth2client,
-        requestBody: {
-          summary: findData?.summary,
-          description: findData?.description,
-          //  location: "Ramnad",
-          start: {
-            dateTime: new Date(startdate), //"2023-07-31T06:54:47.277+00:00",
-            TimeZone: "Asia/kolkata",
-          },
-          end: {
-            dateTime: new Date(endDate), // "2023-07-31T06:54:47.277+00:00",
-            TimeZone: "Asia/kolkata",
-          },
-          attendees: [{ email: params?.email }],
-        },
-      });
-      if (createEvent.data.status == "confirmed") {
-        let storeValue = {
-          summary: findData?.summary,
-          description: findData?.description,
-          startTime: findData?.startTime,
-          endTime: endDate,
-          agenda: findData?.agenda,
-          eventId: createEvent?.data?.id,
-          createdBy: params?.createdBy,
-          updatedBy: params?.createdBy,
-          lastUpdatedBy: params?.lastUpdatedBy,
-          mailType: params?.mailType,
-        };
-        const result = await schedule.updateOne(
-          { _id: findData?._id },
-          storeValue
-        );
-        console.log("result -->", result);
-        if (!result.modifiedCount) {
-          return {
-            status: false,
-            statusCode: statusCodes?.HTTP_BAD_REQUEST,
-            message: messages?.userNotExist,
-            data: [],
-          };
-        }
-        return {
-          status: true,
-          statusCode: statusCodes?.HTTP_OK,
-          message: messages?.updated,
-          data: [],
-        };
-      } else {
-        return {
-          status: false,
-          statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
-          message: messages?.notInserted,
-          data: [],
-        };
-      }
-    }
-    else if (params?.mailType == "MICROSOFT") {
-      const event = {
-        subject: findData?.summary,
-        body: {
-          contentType: "text",
-          content: findData?.description,
-        },
+    console.log("startTime", startdate, "endTime", endDate);
+
+    let createEvent = await calendar.events.insert({
+      calendarId: "primary",
+      auth: oauth2client,
+      requestBody: {
+        summary: findData?.summary,
+        description: findData?.description,
+        //  location: "Ramnad",
         start: {
-          dateTime: new Date(startdate.utcOffset(0,true)),
-          timeZone: "India Standard Time",
+          dateTime: new Date(startdate), //"2023-07-31T06:54:47.277+00:00",
+          TimeZone: "Asia/kolkata",
         },
         end: {
-          dateTime: new Date(endDate.utcOffset(0,true)),
-          timeZone: "India Standard Time",
+          dateTime: new Date(endDate), // "2023-07-31T06:54:47.277+00:00",
+          TimeZone: "Asia/kolkata",
         },
+        attendees: [{ email: params?.email }],
+      },
+    });
+    
+    if (createEvent.data.status == "confirmed") {
+      let storeValue = {
+        summary: findData?.summary,
+        description: findData?.description,
+        startTime: findData?.startTime,
+        endTime: endDate,
+        agenda: findData?.agenda,
+        eventId: createEvent?.data?.id,
+        createdBy: params?.createdBy,
+        updatedBy: params?.createdBy,
+        lastUpdatedBy: params?.lastUpdatedBy,
+        mailType: params?.mailType,
       };
-      console.log("data",event)
-  
-      let token = req?.body?.accesstoken;
-  
-      console.log("token-->", token);
-  
-      let client = getAuthenticatedClient(token);
-  
-      let microsoftCreateEvent = await client.api("/me/events").post(event);
-  
-      console.log("microsoftCreateEvent-->", microsoftCreateEvent);
-  
-      if (microsoftCreateEvent.createdDateTime) {
-        let storeValue = {
-          summary: findData?.summary,
-          description: findData?.description,
-          startTime: findData?.startTime,
-          endTime: endDate,
-          agenda: findData?.agenda,
-          eventId: microsoftCreateEvent?.iCalUId,
-          createdBy: params?.createdBy,
-          updatedBy: params?.createdBy,
-          lastUpdatedBy: params?.lastUpdatedBy,
-          mailType: params?.mailType,
-        };
-        const result = await schedule.updateOne(
-          { _id: findData?._id },
-          storeValue
-        );
-        console.log("result -->", result);
-        if (!result.modifiedCount) {
-          return {
-            status: false,
-            statusCode: statusCodes?.HTTP_BAD_REQUEST,
-            message: messages?.userNotExist,
-            data: [],
-          };
-        }
-        return {
-          status: true,
-          statusCode: statusCodes?.HTTP_OK,
-          message: messages?.updated,
-          data: [],
-        };
-      }
-      console.log("datas--->", data);
+      await schedule.updateOne({ _id: findData?._id }, storeValue);
     } else {
       return {
         status: false,
@@ -335,11 +406,23 @@ const syncCalandarService = async (req, params) => {
       };
     }
   }
-
- 
-
-  
+  return {
+    status: true,
+    statusCode: statusCodes?.HTTP_OK,
+    message: messages?.updated,
+    data: [],
+  };
 };
+
+
+
+
+
+
+
+
+
+
 const deleteScheduleService = async (params) => {
   const id = params?.id;
   var query = {
