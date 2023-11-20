@@ -382,7 +382,7 @@ const syncCalandarService = async (req, params) => {
         attendees: [{ email: params?.email }],
       },
     });
-    
+
     if (createEvent.data.status == "confirmed") {
       let storeValue = {
         summary: findData?.summary,
@@ -396,14 +396,8 @@ const syncCalandarService = async (req, params) => {
         lastUpdatedBy: params?.lastUpdatedBy,
         mailType: params?.mailType,
       };
-      await schedule.updateOne({ _id: findData?._id }, storeValue);
-    } else {
-      return {
-        status: false,
-        statusCode: statusCodes?.HTTP_INTERNAL_SERVER_ERROR,
-        message: messages?.notInserted,
-        data: [],
-      };
+       schedule.updateOne({ _id: findData?._id }, storeValue);
+
     }
   }
   return {
