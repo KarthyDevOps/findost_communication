@@ -141,7 +141,7 @@ router.post(
 );
 router.post(
   routes.v1.schedule.syncCalandar,
- // [verifyToken(["AP"]), syncCalandarScheduleValidation],
+  [verifyToken(["AP"]), syncCalandarScheduleValidation],
   errHandle(syncCalendarSchedule)
 );
 router.get(
