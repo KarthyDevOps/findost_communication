@@ -355,6 +355,7 @@ const syncCalandarService = async (req, params) => {
         _id: { $in: params.id.map((_id) => new mongoose.Types.ObjectId(_id)) },
       },
     ],
+    isGoogleSynced:false
   });
  
   for (let findData of findDatas) {
@@ -395,8 +396,9 @@ const syncCalandarService = async (req, params) => {
         updatedBy: params?.createdBy,
         lastUpdatedBy: params?.lastUpdatedBy,
         mailType: params?.mailType,
+        isGoogleSynced : true
       };
-       schedule.updateOne({ _id: findData?._id }, storeValue);
+      await schedule.updateOne({ _id: findData?._id.toString() }, storeValue);
 
     }
   }

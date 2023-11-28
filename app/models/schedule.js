@@ -6,19 +6,19 @@ const {MAIL_TYPE} = require('../constants/index')
 const scheduleSchema = new mongoose.Schema(
   {
     scheduleId: {
-      type: String
+      type: String,
     },
-    type : {
+    type: {
       type: String,
       trim: true,
-      enum: ["MY SCHEDULE", "FINDOC","ECONOMICS","CORPORATE"],
-      default : "MY SCHEDULE"
+      enum: ["MY SCHEDULE", "FINDOC", "ECONOMICS", "CORPORATE"],
+      default: "MY SCHEDULE",
     },
     eventId: {
       type: String,
       trim: true,
     },
-    apId : {
+    apId: {
       type: String,
       trim: true,
     },
@@ -63,9 +63,16 @@ const scheduleSchema = new mongoose.Schema(
     mailType: {
       type: String,
       trim: true,
-      enum: [MAIL_TYPE.GOOGLE,MAIL_TYPE.MICROSOFT],
+      enum: [MAIL_TYPE.GOOGLE, MAIL_TYPE.MICROSOFT],
     },
-  
+    isGoogleSynced: {
+      type: Boolean,
+      default: false,
+    },
+    isMicrosoftSynced: {
+      type: Boolean,
+      default: false,
+    },
     isActive: {
       type: Boolean,
       default: true,
@@ -81,7 +88,7 @@ const scheduleSchema = new mongoose.Schema(
     updatedBy: {
       type: Schema.Types.ObjectId,
       required: false,
-    }
+    },
   },
 
   {
@@ -89,8 +96,8 @@ const scheduleSchema = new mongoose.Schema(
     toObject: { getters: true },
     toJSON: {
       virtuals: true,
-      getters: true
-    }
+      getters: true,
+    },
   }
 );
 scheduleSchema.virtual('imageUrlS3').get(function () {
