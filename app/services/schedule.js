@@ -157,7 +157,7 @@ const updateScheduleService = async (params) => {
     updatedBy: params?.createdBy,
     lastUpdatedBy: params?.lastUpdatedBy,
     mailType: params?.mailType,
-    isStarred: params?.isStarred,
+    isStarred: params?.isStarred || false,
   };
 
   const id = params?.id;
