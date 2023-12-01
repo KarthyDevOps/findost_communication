@@ -60,6 +60,10 @@ const scheduleSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    isStarred: {
+      type: Boolean,
+      trim: true,
+    },
     place: {
       type: String,
       trim: true,
