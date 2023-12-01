@@ -20,6 +20,17 @@ const addScheduleService = async (req, params) => {
     console.log("params-->", params);
     params.startTime = new Date(params?.startTime)
     params.date = moment(params?.startTime).format("YYYY-MM-DD");
+    let checkExist = await schedule.findOne({
+      newsId : params?.newsId
+    })
+    if(checkExist){
+      return {
+        status: false,
+        statusCode: statusCodes?.HTTP_OK,
+        message: messages?.scheduleExist,
+        data: [],
+      };
+    }
     let result = await schedule.create(params);
     console.log("result", result);
     return {
@@ -355,7 +366,7 @@ const syncCalandarService = async (req, params) => {
         _id: { $in: params.id.map((_id) => new mongoose.Types.ObjectId(_id)) },
       },
     ],
-    isGoogleSynced:false
+    isGoogleSynced: false
   });
  
   for (let findData of findDatas) {

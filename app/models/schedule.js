@@ -39,6 +39,10 @@ const scheduleSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    newsId: {
+      type: String,
+      default: true,
+    },
     endTime: {
       type: Date,
       required: false,

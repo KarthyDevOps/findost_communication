@@ -54,7 +54,8 @@ const messages = {
   scheduleUpdated : "Schedule update Sucessfully",
   scheduleDeleted:"Schedule Deleted Sucessfully",
   scheduleListed:"Schedule Listed Sucessfully",
-  accessDenied : "Access Denied"
+  accessDenied : "Access Denied",
+  scheduleExist : "Schedule Already Exist"
 
 };
 module.exports = { customMessages, messages };
