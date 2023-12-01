@@ -314,7 +314,7 @@ const getMyScheduleList = async (params) => {
       .find(filter)
       .skip((params.page - 1) * params.limit)
       .limit(params.limit)
-      .sort({ isStared: 1 });
+      .sort({ isStarred: 1 });
   }
   data = JSON.parse(JSON.stringify(data));
 
