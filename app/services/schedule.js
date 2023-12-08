@@ -57,7 +57,18 @@ const addMyScheduleService = async (req, params) => {
       let getAdminSchedule = await adminSchedule.findOne({
         _id: params?.id,
       });
-
+      let isExist = await schedule.findOne({
+        adminScheduleId: params?.id,
+      });
+      if(isExist)
+      {
+        return {
+          status: true,
+          statusCode: statusCodes?.HTTP_OK,
+          message: messages?.scheduleCreated,
+          data: [],
+        };
+      }
       let date = getAdminSchedule?.date;
       console.log('date-->', date)
       let startDate = getAdminSchedule?.startTime;
@@ -69,7 +80,7 @@ const addMyScheduleService = async (req, params) => {
       let endTime = moment(date + " " + endDate, "YYYY-MM-DD hh:mm A").format();
       if (getAdminSchedule) {
         let storeValue = {
-          adminScheduleId: getAdminSchedule?._id,
+          adminScheduleId : params?.id,
           summary: getAdminSchedule?.summary,
           description: getAdminSchedule?.description,
           startTime: startTime,

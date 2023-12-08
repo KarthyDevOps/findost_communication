@@ -8,7 +8,10 @@ const scheduleSchema = new mongoose.Schema(
     scheduleId: {
       type: String,
     },
-    type: {
+    adminScheduleId: {
+      type: String
+    },
+    type : {
       type: String,
       trim: true,
       enum: ["MY SCHEDULE", "FINDOC", "ECONOMICS", "CORPORATE"],
