@@ -24,10 +24,7 @@ const addScheduleService = async (req, params) => {
       $or: [
         {
           newsId: params.newsId,
-        },
-        {
-          adminScheduleId: params.adminScheduleId,
-        },
+        }
       ],
     });
     if(checkExist){
@@ -63,9 +60,9 @@ const addMyScheduleService = async (req, params) => {
       if(isExist)
       {
         return {
-          status: true,
+          status: false,
           statusCode: statusCodes?.HTTP_OK,
-          message: messages?.scheduleCreated,
+          message: messages?.scheduleExist,
           data: [],
         };
       }
