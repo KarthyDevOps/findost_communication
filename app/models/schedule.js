@@ -68,11 +68,17 @@ const scheduleSchema = new mongoose.Schema(
       type: String,
       trim: true,
     },
+    adminScheduleId: {
+      type: String,
+      trim: true,
+    },
     mailType: {
       type: String,
       trim: true,
       enum: [MAIL_TYPE.GOOGLE, MAIL_TYPE.MICROSOFT],
     },
+    
+    
     isGoogleSynced: {
       type: Boolean,
       default: false,
