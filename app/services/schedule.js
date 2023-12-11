@@ -20,21 +20,25 @@ const addScheduleService = async (req, params) => {
     console.log("params-->", params);
     params.startTime = new Date(params?.startTime)
     params.date = moment(params?.startTime).format("YYYY-MM-DD");
-    let checkExist = await schedule.findOne({
-      $or: [
-        {
-          newsId: params.newsId,
-        }
-      ],
-    });
-    if(checkExist){
-      return {
-        status: false,
-        statusCode: statusCodes?.HTTP_OK,
-        message: messages?.scheduleExist,
-        data: [],
-      };
+    if(params?.newsId){
+      let checkExist = await schedule.findOne({
+        $or: [
+          {
+            newsId: params.newsId,
+          }
+        ],
+      });
+      if(checkExist){
+        return {
+          status: false,
+          statusCode: statusCodes?.HTTP_OK,
+          message: messages?.scheduleExist,
+          data: [],
+        };
+      }
+
     }
+  
     let result = await schedule.create(params);
     console.log("result", result);
     return {
