@@ -61,7 +61,7 @@ const addMyScheduleService = async (req, params) => {
       {
         return {
           status: false,
-          statusCode: statusCodes?.HTTP_OK,
+          statusCode: statusCodes?.HTTP_BAD_REQUEST,
           message: messages?.scheduleExist,
           data: [],
         };
