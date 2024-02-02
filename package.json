@@ -1,14 +1,14 @@
 {
-  "name": "gradiant-admin",
+  "name": "FINDOC-COMMUNICATION-SERVICE",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npm i && nodemon index.js DEV",
+    "start": "nodemon index.js DEV",
     "preprod": "npm i && nodemon index.js PREPROD",
     "dev": "nodemon index.js LOCAL",
-    "prod": "npm i && nodemon index.js PROD"
+    "prod": "nodemon index.js PROD"
   },
   "author": "",
   "license": "ISC",

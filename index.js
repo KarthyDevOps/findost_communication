@@ -3,11 +3,11 @@ const urlencoded = express.urlencoded;
 const cookieParser = require("cookie-parser");
 const process = require("process");
 const dotenv = require("dotenv");
-dotenv.config()
+dotenv.config();
 const path = require("path");
 const mongoose = require("mongoose");
 var Schema = mongoose.Schema;
-var cors = require('cors')
+var cors = require("cors");
 const bodyParser = require("body-parser");
 const routerService = require("./app/router/router");
 const { errHandle } = require("./app/middlewares/errorHandler");
@@ -16,6 +16,8 @@ const swaggerDocument = require("./app/swagger/swagger.json");
 const exp = require("constants");
 const app = express();
 
+
+
 //swagger setup
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -23,8 +25,12 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 require("dotenv").config({ path: path.join(process.cwd(), `.env`) });
 const args = process.argv.slice(2)[0];
 process.env.CONFIG_ARG = args;
-let CONFIG = require('./app/configs/config')(args)
-process.env = { ...process.env,...CONFIG}
+let CONFIG = require("./app/configs/config")(args);
+process.env = { ...process.env, ...CONFIG };
+
+
+console.log("Ars", args);
+console.log("configs--->", process.env);
 
 
 app.use(urlencoded({ extended: false }));
@@ -48,22 +54,42 @@ app.use((req, res, next) => {
   next();
 });
 
-//DB connection
-const connectOptions = {
-  useNewUrlParser: true,
-  autoIndex: true,
-};
-const connectToMongo = async () => {
-  await mongoose.connect(process.env.MONGO_URI);
-  console.log("Connected to MongoDB Sucessfully!!");
-};
 
-connectToMongo();
+
+let mongoDBOptions;
+
+if (args === "PREPROD") {
+  mongoDBOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    ssl: true,
+    sslValidate: false,
+  };
+} else {
+  mongoDBOptions = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  };
+}
+
+console.log("MOngo DB options ", mongoDBOptions);
+// Connect to database
+mongoose
+  .connect(process.env.MONGO_URI, mongoDBOptions)
+  .then((res) => {
+    console.log("Database connected");
+  })
+  .catch((err) => {
+    console.log("Database connection error", err);
+  });
+mongoose.connection.on("error", function (err) {
+  console.error("MongoDB connection error: " + err);
+  process.exit(-1);
+});
+
 //initiative aws s3 buck
 const port = process.env.PORT;
 app.use("/communication", routerService);
-
-
 
 app.listen(port, () => {
   console.log(
