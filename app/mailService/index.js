@@ -3,7 +3,7 @@ var nodemailer = require('nodemailer');
 const mail = async function (mailOption) {
     console.log('mailOption', mailOption)
     var transporter = nodemailer.createTransport({
-        service:"hotmail",
+        service:"Gmail",
         port: 587,
         // secure: true,
         auth: {
