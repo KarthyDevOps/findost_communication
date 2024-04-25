@@ -1,0 +1,27 @@
+#Deployment Yaml for Findoc-cms
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: findoc-communication
+spec:
+  selector:
+    matchLabels:
+      app: findoc-communication
+  template:
+    metadata:
+      labels:
+        app: findoc-communication
+    spec:
+      containers:
+      - name: findoc-communication
+        image: 6471112580006.dkr.ecr.ap-south-1.amazonaws.com/findost_communication
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 2275
+        envFrom:
+        - configMapRef:
+            name: findost-communication-configmap

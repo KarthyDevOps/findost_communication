@@ -1,0 +1,13 @@
+#Service-yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: findoc-communication
+spec:
+  type: NodePort
+  selector:
+    app: findoc-communication
+  ports:
+  - port: 2275
+    targetPort: 2275
