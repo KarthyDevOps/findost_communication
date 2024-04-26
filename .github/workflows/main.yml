@@ -2,9 +2,9 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ pre-prodcution ]
-  # pull_request:
-  #   branches: ["pre-prodcution"]
+    branches: [ pre-production ]
+  pull_request:
+    branches: ["pre-production"]
 
 env:
   IMAGE_NAME: cms-dep
