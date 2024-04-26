@@ -38,7 +38,7 @@ jobs:
         run: | 
           sed -i "s|KarthyDevops/cms-dep.*|KarthyDevops/${{env.IMAGE_NAME}}:${{github.run_number}}|g" deployment/deployment.yaml
 
-          cat deployment/Deployment.yaml
+          cat deployment/deployment.yaml
       - name: commit changes
         run: |
           git config --local user.mail "karthy.shunmugam@gmail.com"
