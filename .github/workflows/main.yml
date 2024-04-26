@@ -36,6 +36,11 @@ jobs:
 
       - name: Update deployment.yaml
         run: | 
+          sed -i "s|KarthyDevops/cms-dep.*|KarthyDevops/${{env.IMAGE_NAME}}:${{github.run_number}}|g" deployment/Deployment.yaml
+
+          cat deployment/Deployment.yaml
+      - name: commit changes
+        run: |
           git config --local user.mail "karthy.shunmugam@gmail.com"
           git config --local user.name "KarthyDevops"
           git add .
