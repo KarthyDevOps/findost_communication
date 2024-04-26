@@ -47,4 +47,4 @@ jobs:
           git commit -m "Update deployment.yaml with new Docker image [skip ci]"
 
         env:
-          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
