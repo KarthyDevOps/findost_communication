@@ -36,7 +36,7 @@ jobs:
 
       - name: Update deployment.yaml
         run: | 
-          git config --local user.mail "karthick.shunmugam@gmail.com"
+          git config --local user.mail "karthy.shunmugam@gmail.com"
           git config --local user.name "KarthyDevops"
           git add .
           git commit -m "Update deployment.yaml with new Docker image [skip ci]"
