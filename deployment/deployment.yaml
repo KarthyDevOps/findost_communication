@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: findoc-communication
-        image: DOCKER_IMAGE
+        image: 471112580006.dkr.ecr.ap-south-1.amazonaws.com/findost_communication
         resources:
           limits:
             memory: "128Mi"
